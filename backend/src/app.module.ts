@@ -22,6 +22,7 @@ import { DepartmentsModule } from './departments/departments.module.js';
 import { SubjectsModule } from './subjects/subjects.module.js';
 import { TimetableModule } from './timetable/timetable.module.js';
 import { AttendanceModule } from './attendance/attendance.module.js';
+import { AssignmentsModule } from './assignments/assignments.module.js';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AttendanceModule } from './attendance/attendance.module.js';
     SubjectsModule,
     TimetableModule,
     AttendanceModule,
+    AssignmentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
