@@ -17,6 +17,11 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { UsersModule } from './users/users.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { StudentsModule } from './students/students.module.js';
+import { DepartmentsModule } from './departments/departments.module.js';
+import { SubjectsModule } from './subjects/subjects.module.js';
+import { TimetableModule } from './timetable/timetable.module.js';
+import { AttendanceModule } from './attendance/attendance.module.js';
 
 @Module({
   imports: [
@@ -32,6 +37,11 @@ import { AuthModule } from './auth/auth.module.js';
     }),
     UsersModule,
     AuthModule,
+    StudentsModule,
+    DepartmentsModule,
+    SubjectsModule,
+    TimetableModule,
+    AttendanceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
