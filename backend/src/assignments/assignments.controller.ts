@@ -16,7 +16,7 @@ export class AssignmentsController {
   constructor(
     private assignmentsService: AssignmentsService,
     private studentsService: StudentsService,
-  ) { }
+  ) {}
 
   @Post()
   @Roles(UserRole.FACULTY)
@@ -27,6 +27,24 @@ export class AssignmentsController {
   @Get('subject/:subjectId')
   findBySubject(@Param('subjectId') subjectId: string) {
     return this.assignmentsService.findBySubject(subjectId);
+  }
+
+  // Static routes MUST come before ':id' routes, or Nest matches the dynamic one first
+  @Get('my/submissions')
+  @Roles(UserRole.STUDENT)
+  async getMySubmissions(@CurrentUser() user: any) {
+    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
+    return this.assignmentsService.getMySubmissions(studentId);
+  }
+
+  @Post('submissions/:submissionId/grade')
+  @Roles(UserRole.FACULTY)
+  grade(
+    @CurrentUser() user: any,
+    @Param('submissionId') submissionId: string,
+    @Body() dto: GradeSubmissionDto,
+  ) {
+    return this.assignmentsService.grade(submissionId, user.userId, dto);
   }
 
   @Get(':id')
@@ -49,22 +67,5 @@ export class AssignmentsController {
   @Roles(UserRole.FACULTY, UserRole.ADMIN, UserRole.HOD)
   getSubmissions(@Param('id') assignmentId: string) {
     return this.assignmentsService.getSubmissionsForAssignment(assignmentId);
-  }
-
-  @Get('my/submissions')
-  @Roles(UserRole.STUDENT)
-  async getMySubmissions(@CurrentUser() user: any) {
-    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
-    return this.assignmentsService.getMySubmissions(studentId);
-  }
-
-  @Post('submissions/:submissionId/grade')
-  @Roles(UserRole.FACULTY)
-  grade(
-    @CurrentUser() user: any,
-    @Param('submissionId') submissionId: string,
-    @Body() dto: GradeSubmissionDto,
-  ) {
-    return this.assignmentsService.grade(submissionId, user.userId, dto);
   }
 }

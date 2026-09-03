@@ -24,6 +24,9 @@ import { TimetableModule } from './timetable/timetable.module.js';
 import { AttendanceModule } from './attendance/attendance.module.js';
 import { AssignmentsModule } from './assignments/assignments.module.js';
 import { ExamsModule } from './exams/exams.module.js';
+import { FacultyModule } from './faculty/faculty.module.js';
+import { CompaniesModule } from './companies/companies.module.js';
+import { PlacementsModule } from './placements/placements.module.js';
 
 @Module({
   imports: [
@@ -46,6 +49,9 @@ import { ExamsModule } from './exams/exams.module.js';
     AttendanceModule,
     AssignmentsModule,
     ExamsModule,
+    FacultyModule,
+    CompaniesModule,
+    PlacementsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
