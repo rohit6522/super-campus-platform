@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/stores/auth-store';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function DashboardLayout({
   children,
@@ -12,11 +13,16 @@ export default function DashboardLayout({
 }) {
   const { user, isChecking, clearAuth } = useAuth();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleLogout = () => {
     clearAuth();
+    queryClient.clear(); // wipe all cached query data so the next login starts fresh
     router.push('/login');
   };
+
+
+
 
   if (isChecking) {
     return (
