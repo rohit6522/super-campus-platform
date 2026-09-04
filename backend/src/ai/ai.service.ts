@@ -1,15 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 import { Model } from 'mongoose';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse');
 import { AiDocument, AiDocumentDocument } from './schemas/ai-document.schema.js';
+import { AiJob, AiJobDocument, AiJobStatus, AiJobType } from './schemas/ai-job.schema.js';
+import { Note, NoteDocument } from './schemas/note.schema.js';
 import { CreateDocumentDto } from './dto/create-document.dto.js';
 import { chunkText } from './utils/chunker.util.js';
 import { GroqClient } from './groq.client.js';
+import type { PdfNotesJobData } from './processors/pdf-notes.processor.js';
 
 @Injectable()
 export class AiService {
   constructor(
     @InjectModel(AiDocument.name) private aiDocumentModel: Model<AiDocumentDocument>,
+    @InjectModel(AiJob.name) private aiJobModel: Model<AiJobDocument>,
+    @InjectModel(Note.name) private noteModel: Model<NoteDocument>,
+    @InjectQueue('pdf-notes') private pdfNotesQueue: Queue<PdfNotesJobData>,
     private groqClient: GroqClient,
   ) {}
 
@@ -30,8 +41,6 @@ export class AiService {
     return this.aiDocumentModel.find().select('-chunks').sort({ createdAt: -1 }).exec();
   }
 
-  // Retrieves the most relevant chunks across all documents using MongoDB's text search.
-  // This is the retrieval step — will be swapped for real vector search later.
   private async retrieveRelevantChunks(question: string, limit = 5): Promise<string[]> {
     const results = await this.aiDocumentModel
       .aggregate([
@@ -51,7 +60,6 @@ export class AiService {
     const relevantChunks = await this.retrieveRelevantChunks(question);
 
     if (relevantChunks.length === 0) {
-      // No matching context found — be honest rather than letting the LLM hallucinate an answer
       const answer = await this.groqClient.chat([
         {
           role: 'system',
@@ -79,5 +87,50 @@ export class AiService {
     ]);
 
     return { answer, sourcesUsed: relevantChunks.length };
+  }
+
+  async uploadPdfForNotes(
+    studentId: string,
+    fileBuffer: Buffer,
+    fileName: string,
+  ): Promise<AiJobDocument> {
+    const parsed = await pdfParse(fileBuffer);
+    const extractedText = parsed.text;
+
+    if (!extractedText || extractedText.trim().length < 50) {
+      throw new NotFoundException('Could not extract meaningful text from this PDF');
+    }
+
+    const job = await this.aiJobModel.create({
+      studentId,
+      type: AiJobType.PDF_TO_NOTES,
+      status: AiJobStatus.PENDING,
+      sourceFileName: fileName,
+    });
+
+    await this.pdfNotesQueue.add('generate-notes', {
+      jobId: String(job._id),
+      studentId,
+      extractedText,
+      fileName,
+    });
+
+    return job;
+  }
+
+  async getJobStatus(jobId: string, studentId: string): Promise<AiJobDocument> {
+    const job = await this.aiJobModel.findOne({ _id: jobId, studentId }).exec();
+    if (!job) throw new NotFoundException('Job not found');
+    return job;
+  }
+
+  async getMyNotes(studentId: string) {
+    return this.noteModel.find({ studentId }).sort({ createdAt: -1 }).exec();
+  }
+
+  async getNote(id: string, studentId: string): Promise<NoteDocument> {
+    const note = await this.noteModel.findOne({ _id: id, studentId }).exec();
+    if (!note) throw new NotFoundException('Note not found');
+    return note;
   }
 }
