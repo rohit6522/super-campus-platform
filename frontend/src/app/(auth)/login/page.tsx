@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import axios from 'axios';
+import { getDashboardPathForRole } from '@/lib/role-routes';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,13 +34,13 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
+   const onSubmit = async (data: LoginFormValues) => {
     setServerError(null);
     setIsSubmitting(true);
     try {
       const response = await loginUser(data);
       setAuth(response.user, response.accessToken, response.refreshToken);
-      router.push('/dashboard');
+      router.push(getDashboardPathForRole(response.user.role));
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data?.message) {
         setServerError(err.response.data.message);

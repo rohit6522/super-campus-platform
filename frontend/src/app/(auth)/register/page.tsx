@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import axios from 'axios';
+import { getDashboardPathForRole } from '@/lib/role-routes';
 
 const roleOptions = [
   { value: 'STUDENT', label: 'Student' },
@@ -42,14 +43,15 @@ export default function RegisterPage() {
     defaultValues: { role: 'STUDENT' },
   });
 
-  const onSubmit = async (data: RegisterFormValues) => {
+   const onSubmit = async (data: RegisterFormValues) => {
     setServerError(null);
     setIsSubmitting(true);
     try {
       const response = await registerUser(data);
       setAuth(response.user, response.accessToken, response.refreshToken);
-      router.push('/dashboard');
+      router.push(getDashboardPathForRole(response.user.role));
     } catch (err) {
+
       if (axios.isAxiosError(err) && err.response?.data?.message) {
         setServerError(err.response.data.message);
       } else {

@@ -2,11 +2,15 @@
 
 import { useAuthStore } from '@/stores/auth-store';
 import { useFacultyProfile, useMySubjects } from '@/hooks/queries/use-faculty-dashboard';
+import { useRoleGuard } from '@/hooks/use-role-guard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function FacultyDashboardPage() {
+  useRoleGuard(['FACULTY']);
   const user = useAuthStore((state) => state.user);
+  // ...rest stays exactly the same
+
   const { data: profile, isLoading: profileLoading, isError: profileError } = useFacultyProfile();
   const { data: subjects, isLoading: subjectsLoading } = useMySubjects();
 
