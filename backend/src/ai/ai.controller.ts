@@ -19,6 +19,7 @@ import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { UserRole } from '../users/schemas/user.schema.js';
 import { StudentsService } from '../students/students.service.js';
+import { SubmitQuizDto } from './dto/submit-quiz.dto.js';
 
 @Controller('ai')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -74,5 +75,48 @@ export class AiController {
   async getNote(@CurrentUser() user: any, @Param('id') id: string) {
     const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
     return this.aiService.getNote(id, studentId);
+  }
+
+    @Post('pdf/mcqs')
+  @Roles(UserRole.STUDENT)
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadPdfForMcqs(
+    @CurrentUser() user: any,
+    @UploadedFile() file: { buffer: Buffer; originalname: string },
+  ) {
+    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
+    return this.aiService.uploadPdfForMcqs(studentId, file.buffer, file.originalname);
+  }
+
+  @Get('mcq-sets')
+  @Roles(UserRole.STUDENT)
+  async getMyMcqSets(@CurrentUser() user: any) {
+    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
+    return this.aiService.getMyMcqSets(studentId);
+  }
+
+  @Get('mcq-sets/:id/quiz')
+  @Roles(UserRole.STUDENT)
+  async getMcqSetForQuiz(@CurrentUser() user: any, @Param('id') id: string) {
+    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
+    return this.aiService.getMcqSetForQuiz(id, studentId);
+  }
+
+  @Post('mcq-sets/:id/submit')
+  @Roles(UserRole.STUDENT)
+  async submitQuiz(
+    @CurrentUser() user: any,
+    @Param('id') mcqSetId: string,
+    @Body() dto: SubmitQuizDto,
+  ) {
+    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
+    return this.aiService.submitQuizAttempt(studentId, mcqSetId, dto.selectedAnswers);
+  }
+
+  @Get('attempts/:attemptId/result')
+  @Roles(UserRole.STUDENT)
+  async getQuizResult(@CurrentUser() user: any, @Param('attemptId') attemptId: string) {
+    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
+    return this.aiService.getQuizResult(attemptId, studentId);
   }
 }

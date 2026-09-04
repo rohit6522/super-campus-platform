@@ -13,14 +13,20 @@ import { CreateDocumentDto } from './dto/create-document.dto.js';
 import { chunkText } from './utils/chunker.util.js';
 import { GroqClient } from './groq.client.js';
 import type { PdfNotesJobData } from './processors/pdf-notes.processor.js';
+import { McqSet, McqSetDocument } from './schemas/mcq-set.schema.js';
+import { QuizAttempt, QuizAttemptDocument } from './schemas/quiz-attempt.schema.js';
+import type { PdfMcqsJobData } from './processors/pdf-mcqs.processor.js';
 
 @Injectable()
 export class AiService {
-  constructor(
+   constructor(
     @InjectModel(AiDocument.name) private aiDocumentModel: Model<AiDocumentDocument>,
     @InjectModel(AiJob.name) private aiJobModel: Model<AiJobDocument>,
     @InjectModel(Note.name) private noteModel: Model<NoteDocument>,
+    @InjectModel(McqSet.name) private mcqSetModel: Model<McqSetDocument>,
+    @InjectModel(QuizAttempt.name) private quizAttemptModel: Model<QuizAttemptDocument>,
     @InjectQueue('pdf-notes') private pdfNotesQueue: Queue<PdfNotesJobData>,
+    @InjectQueue('pdf-mcqs') private pdfMcqsQueue: Queue<PdfMcqsJobData>,
     private groqClient: GroqClient,
   ) {}
 
@@ -132,5 +138,99 @@ export class AiService {
     const note = await this.noteModel.findOne({ _id: id, studentId }).exec();
     if (!note) throw new NotFoundException('Note not found');
     return note;
+  }
+
+    async uploadPdfForMcqs(
+    studentId: string,
+    fileBuffer: Buffer,
+    fileName: string,
+  ): Promise<AiJobDocument> {
+    const parsed = await pdfParse(fileBuffer);
+    const extractedText = parsed.text;
+
+    if (!extractedText || extractedText.trim().length < 50) {
+      throw new NotFoundException('Could not extract meaningful text from this PDF');
+    }
+
+    const job = await this.aiJobModel.create({
+      studentId,
+      type: AiJobType.PDF_TO_MCQS,
+      status: AiJobStatus.PENDING,
+      sourceFileName: fileName,
+    });
+
+    await this.pdfMcqsQueue.add('generate-mcqs', {
+      jobId: String(job._id),
+      studentId,
+      extractedText,
+      fileName,
+    });
+
+    return job;
+  }
+
+  async getMyMcqSets(studentId: string) {
+    return this.mcqSetModel.find({ studentId }).select('-questions.correctAnswerIndex -questions.explanation').sort({ createdAt: -1 }).exec();
+  }
+
+  // Returns the MCQ set WITHOUT correct answers — for taking the quiz
+  async getMcqSetForQuiz(id: string, studentId: string) {
+    const mcqSet = await this.mcqSetModel.findOne({ _id: id, studentId }).exec();
+    if (!mcqSet) throw new NotFoundException('MCQ set not found');
+
+    const sanitized = mcqSet.toObject();
+    sanitized.questions = sanitized.questions.map((q: any) => ({
+      question: q.question,
+      options: q.options,
+      difficulty: q.difficulty,
+      topic: q.topic,
+      // correctAnswerIndex and explanation deliberately omitted
+    }));
+
+    return sanitized;
+  }
+
+  async submitQuizAttempt(
+    studentId: string,
+    mcqSetId: string,
+    selectedAnswers: number[],
+  ): Promise<QuizAttemptDocument> {
+    const mcqSet = await this.mcqSetModel.findOne({ _id: mcqSetId, studentId }).exec();
+    if (!mcqSet) throw new NotFoundException('MCQ set not found');
+
+    if (selectedAnswers.length !== mcqSet.questions.length) {
+      throw new NotFoundException('Number of answers does not match number of questions');
+    }
+
+    const answers = mcqSet.questions.map((question, index) => {
+      const selectedIndex = selectedAnswers[index];
+      const isCorrect = selectedIndex === question.correctAnswerIndex;
+      return { questionIndex: index, selectedIndex, isCorrect };
+    });
+
+    const score = answers.filter((a) => a.isCorrect).length;
+
+    const attempt = new this.quizAttemptModel({
+      studentId,
+      mcqSetId,
+      answers,
+      score,
+      totalQuestions: mcqSet.questions.length,
+    });
+
+    return attempt.save();
+  }
+
+  async getQuizResult(attemptId: string, studentId: string) {
+    const attempt = await this.quizAttemptModel.findOne({ _id: attemptId, studentId }).exec();
+    if (!attempt) throw new NotFoundException('Attempt not found');
+
+    const mcqSet = await this.mcqSetModel.findById(attempt.mcqSetId).exec();
+
+    // Now include correct answers + explanations since the quiz is already submitted
+    return {
+      attempt,
+      questions: mcqSet?.questions ?? [],
+    };
   }
 }
