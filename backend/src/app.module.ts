@@ -29,6 +29,9 @@ import { CompaniesModule } from './companies/companies.module.js';
 import { PlacementsModule } from './placements/placements.module.js';
 import { ResumesModule } from './resumes/resumes.module.js';
 import { AtsModule } from './ats/ats.module.js';
+import { AdminModule } from './admin/admin.module.js';
+import { CodingModule } from './coding/coding.module.js';
+import { AiModule } from './ai/ai.module.js';
 
 @Module({
   imports: [
@@ -56,6 +59,9 @@ import { AtsModule } from './ats/ats.module.js';
     PlacementsModule,
     ResumesModule,
     AtsModule,
+    AdminModule,
+    CodingModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

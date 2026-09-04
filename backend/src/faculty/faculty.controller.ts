@@ -13,13 +13,12 @@ export class FacultyController {
   constructor(private facultyService: FacultyService) {}
 
   @Post('profile')
-  @Roles(UserRole.FACULTY)
+  @Roles(UserRole.FACULTY, UserRole.HOD)
   createMyProfile(@CurrentUser() user: any, @Body() dto: CreateFacultyProfileDto) {
     return this.facultyService.createProfile(user.userId, dto);
   }
-
   @Get('me')
-  @Roles(UserRole.FACULTY)
+  @Roles(UserRole.FACULTY, UserRole.HOD)
   getMyProfile(@CurrentUser() user: any) {
     return this.facultyService.findMyProfile(user.userId);
   }
