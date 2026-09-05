@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/rohit/super-campus-platform/frontend/src/components/providers/query-provider.tsx"],"sourcesContent":["'use client';\r\n\r\nimport { useState } from 'react';\r\nimport { QueryClient, QueryClientProvider } from '@tanstack/react-query';\r\n\r\nexport function QueryProvider({ children }: { children: React.ReactNode }) {\r\n  const [queryClient] = useState(\r\n    () =>\r\n      new QueryClient({\r\n        defaultOptions: {\r\n          queries: {\r\n            staleTime: 60 * 1000, // 1 minute\r\n            retry: 1,\r\n          },\r\n        },\r\n      }),\r\n  );\r\n\r\n  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;\r\n}"],"names":["QueryProvider","children","queryClient","defaultOptions","queries","staleTime","retry","client"],"mappings":";;;;;AAEA;AACA;AAAA;;;AAHA;;;AAKO,SAASA,cAAc,EAAEC,QAAQ,EAAiC;;IACvE,MAAM,CAACC,YAAY,GAAG,IAAA,yKAAQ;kCAC5B,IACE,IAAI,+LAAW,CAAC;gBACdC,gBAAgB;oBACdC,SAAS;wBACPC,WAAW,KAAK;wBAChBC,OAAO;oBACT;gBACF;YACF;;IAGJ,qBAAO,6LAAC,gNAAmB;QAACC,QAAQL;kBAAcD;;;;;;AACpD;GAdgBD;KAAAA"}}]
+}
