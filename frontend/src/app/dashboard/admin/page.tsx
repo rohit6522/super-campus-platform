@@ -74,6 +74,11 @@ export default function AdminDashboardPage() {
               Add Coding Problem
             </Button>
           </Link>
+          <Link href="/dashboard/admin/announcements">
+            <Button variant="outline" size="sm">
+              Post Announcement
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>

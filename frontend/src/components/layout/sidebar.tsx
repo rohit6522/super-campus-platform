@@ -61,6 +61,7 @@ const sections: NavSection[] = [
     items: [
       { label: 'Company Drives & Jobs', href: '/dashboard/placements', icon: Briefcase },
       { label: 'Application Tracker', href: '/dashboard/placements/applications', icon: ClipboardList },
+      { label: 'Resume Builder', href: '/dashboard/resumes', icon: FileText },
       { label: 'ATS Resume Analyzer', href: '/dashboard/ats', icon: FileText },
       { label: 'DSA Coding Arena', href: '/dashboard/coding', icon: Code2 },
       { label: 'AI Mock Interview Room', href: '/dashboard/interview', icon: MessageSquare, disabled: true },

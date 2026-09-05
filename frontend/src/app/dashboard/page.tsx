@@ -12,6 +12,8 @@ import { useRoleGuard } from '@/hooks/use-role-guard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CalendarCheck, GraduationCap, Briefcase, FileText, Clock, AlertTriangle } from 'lucide-react';
+import { useAnnouncements } from '@/hooks/queries/use-announcements';
+
 
 export default function DashboardPage() {
   useRoleGuard(['STUDENT']);
@@ -25,7 +27,7 @@ export default function DashboardPage() {
     profile?.departmentId?._id,
     profile?.semester,
   );
-
+    const { data: announcements, isLoading: announcementsLoading } = useAnnouncements(5);
   const pendingCount =
     submissions?.filter((s: any) => s.status === 'SUBMITTED' || s.status === 'LATE').length ?? 0;
 
@@ -197,16 +199,33 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      {/* Placeholder notice board (real feature comes later) */}
-      <Card className="border-amber-200 bg-amber-50/50">
+           {/* Real notice board */}
+      <Card>
         <CardContent className="pt-6">
-          <div className="mb-2 flex items-center gap-2 text-amber-700">
-            <AlertTriangle size={16} />
+          <div className="mb-3 flex items-center gap-2">
+            <AlertTriangle size={16} className="text-muted-foreground" />
             <h2 className="font-semibold">Notice Board</h2>
           </div>
-          <p className="text-sm text-muted-foreground">
-            University-wide announcements will appear here once the Notices feature is built.
-          </p>
+          {announcementsLoading ? (
+            <Skeleton className="h-24 w-full" />
+          ) : announcements && announcements.length > 0 ? (
+            <div className="space-y-3">
+              {announcements.map((a) => (
+                <div key={a._id} className="rounded-lg border p-3 text-sm">
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium">{a.title}</p>
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs">{a.category}</span>
+                  </div>
+                  <p className="mt-1 text-muted-foreground line-clamp-2">{a.content}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {a.postedBy?.name} · {new Date(a.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No announcements yet.</p>
+          )}
         </CardContent>
       </Card>
     </div>

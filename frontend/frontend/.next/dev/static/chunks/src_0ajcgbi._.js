@@ -18,9 +18,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$text$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__FileText$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/file-text.mjs [app-client] (ecmascript) <export default as FileText>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/clock.mjs [app-client] (ecmascript) <export default as Clock>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$triangle$2d$alert$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertTriangle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/triangle-alert.mjs [app-client] (ecmascript) <export default as AlertTriangle>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$announcements$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/hooks/queries/use-announcements.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
+;
 ;
 ;
 ;
@@ -40,6 +42,7 @@ function DashboardPage() {
     const { data: cgpaData, isLoading: cgpaLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$student$2d$dashboard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMyCGPA"])();
     const { data: submissions, isLoading: submissionsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$student$2d$dashboard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMySubmissions"])();
     const { data: timetable, isLoading: timetableLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$student$2d$dashboard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMyTimetable"])(profile?.departmentId?._id, profile?.semester);
+    const { data: announcements, isLoading: announcementsLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$announcements$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAnnouncements"])(5);
     const pendingCount = submissions?.filter((s)=>s.status === 'SUBMITTED' || s.status === 'LATE').length ?? 0;
     if (profileError) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -702,7 +705,7 @@ function DashboardPage() {
         columnNumber: 5
     }, this);
 }
-_s(DashboardPage, "n7jopEzXohXLXqnvxiOe6m2Xeu0=", false, function() {
+_s(DashboardPage, "t5PvsWGGVjoTYsqQlfzwlJ51ecI=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$role$2d$guard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRoleGuard"],
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$stores$2f$auth$2d$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuthStore"],
@@ -710,7 +713,8 @@ _s(DashboardPage, "n7jopEzXohXLXqnvxiOe6m2Xeu0=", false, function() {
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$student$2d$dashboard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMyAttendance"],
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$student$2d$dashboard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMyCGPA"],
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$student$2d$dashboard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMySubmissions"],
-        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$student$2d$dashboard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMyTimetable"]
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$student$2d$dashboard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMyTimetable"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$queries$2f$use$2d$announcements$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAnnouncements"]
     ];
 });
 _c = DashboardPage;
@@ -869,6 +873,66 @@ _c = Skeleton;
 ;
 var _c;
 __turbopack_context__.k.register(_c, "Skeleton");
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
+"[project]/src/hooks/queries/use-announcements.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "useAnnouncements",
+    ()=>useAnnouncements,
+    "useCreateAnnouncement",
+    ()=>useCreateAnnouncement
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@tanstack/react-query/build/modern/useQuery.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@tanstack/react-query/build/modern/useMutation.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$QueryClientProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2f$announcements$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/api/announcements.ts [app-client] (ecmascript)");
+var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+'use client';
+;
+;
+function useAnnouncements(limit) {
+    _s();
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
+        queryKey: [
+            'announcements',
+            limit
+        ],
+        queryFn: {
+            "useAnnouncements.useQuery": ()=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2f$announcements$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getAnnouncements"])(limit)
+        }["useAnnouncements.useQuery"]
+    });
+}
+_s(useAnnouncements, "4ZpngI1uv+Uo3WQHEZmTQ5FNM+k=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"]
+    ];
+});
+function useCreateAnnouncement() {
+    _s1();
+    const queryClient = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$QueryClientProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQueryClient"])();
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
+        mutationFn: {
+            "useCreateAnnouncement.useMutation": (data)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2f$announcements$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createAnnouncement"])(data)
+        }["useCreateAnnouncement.useMutation"],
+        onSuccess: {
+            "useCreateAnnouncement.useMutation": ()=>queryClient.invalidateQueries({
+                    queryKey: [
+                        'announcements'
+                    ]
+                })
+        }["useCreateAnnouncement.useMutation"]
+    });
+}
+_s1(useCreateAnnouncement, "YK0wzM21ECnncaq5SECwU+/SVdQ=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$QueryClientProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQueryClient"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"]
+    ];
+});
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
@@ -1137,6 +1201,33 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
 }),
+"[project]/src/lib/api/announcements.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "createAnnouncement",
+    ()=>createAnnouncement,
+    "getAnnouncements",
+    ()=>getAnnouncements
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/api-client.ts [app-client] (ecmascript)");
+;
+async function getAnnouncements(limit) {
+    const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiClient"].get('/announcements', {
+        params: limit ? {
+            limit
+        } : undefined
+    });
+    return response.data;
+}
+async function createAnnouncement(data) {
+    const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiClient"].post('/announcements', data);
+    return response.data;
+}
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
+}
+}),
 "[project]/src/lib/api/assignments.ts [app-client] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
@@ -1263,4 +1354,4 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 }),
 ]);
 
-//# sourceMappingURL=src_0lab2dd._.js.map
+//# sourceMappingURL=src_0ajcgbi._.js.map

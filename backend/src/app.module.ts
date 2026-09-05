@@ -32,6 +32,7 @@ import { AtsModule } from './ats/ats.module.js';
 import { AdminModule } from './admin/admin.module.js';
 import { CodingModule } from './coding/coding.module.js';
 import { AiModule } from './ai/ai.module.js';
+import { AnnouncementsModule } from './announcements/announcements.module.js';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { AiModule } from './ai/ai.module.js';
     AdminModule,
     CodingModule,
     AiModule,
+    AnnouncementsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
