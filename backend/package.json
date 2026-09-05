@@ -7,7 +7,6 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "seed": "npm run build && node dist/seed.js",
     "build": "nest build",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
