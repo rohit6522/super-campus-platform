@@ -1,24 +1,25 @@
-'use client';
+"use client";
 
-import { useAuthStore } from '@/stores/auth-store';
-import { useAdminStats } from '@/hooks/queries/use-admin-dashboard';
-import { useRoleGuard } from '@/hooks/use-role-guard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-
+import { useAuthStore } from "@/stores/auth-store";
+import { useAdminStats } from "@/hooks/queries/use-admin-dashboard";
+import { useRoleGuard } from "@/hooks/use-role-guard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 export default function AdminDashboardPage() {
-  useRoleGuard(['ADMIN', 'SUPER_ADMIN']);
+  useRoleGuard(["ADMIN", "SUPER_ADMIN"]);
   const user = useAuthStore((state) => state.user);
   // ...rest stays exactly the same
   const { data: stats, isLoading } = useAdminStats();
 
   const statCards = [
-    { label: 'Total Students', value: stats?.totalStudents },
-    { label: 'Total Faculty', value: stats?.totalFaculty },
-    { label: 'Departments', value: stats?.totalDepartments },
-    { label: 'Companies', value: stats?.totalCompanies },
-    { label: 'Active Placement Drives', value: stats?.activeDrives },
-    { label: 'Total Users', value: stats?.totalUsers },
+    { label: "Total Students", value: stats?.totalStudents },
+    { label: "Total Faculty", value: stats?.totalFaculty },
+    { label: "Departments", value: stats?.totalDepartments },
+    { label: "Companies", value: stats?.totalCompanies },
+    { label: "Active Placement Drives", value: stats?.activeDrives },
+    { label: "Total Users", value: stats?.totalUsers },
   ];
 
   return (
@@ -51,11 +52,28 @@ export default function AdminDashboardPage() {
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">
-            Department, subject, and company management screens will be built next —
-            for now, manage these via the API directly.
-          </p>
+        <CardContent className="flex flex-wrap gap-2">
+          <Link href="/dashboard/admin/departments">
+            <Button variant="outline" size="sm">
+              Manage Departments
+            </Button>
+          </Link>
+
+          <Link href="/dashboard/admin/subjects">
+            <Button variant="outline" size="sm">
+              Manage Subjects
+            </Button>
+          </Link>
+          <Link href="/dashboard/admin/companies">
+            <Button variant="outline" size="sm">
+              Manage Companies
+            </Button>
+          </Link>
+          <Link href="/dashboard/admin/coding-problems">
+            <Button variant="outline" size="sm">
+              Add Coding Problem
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>

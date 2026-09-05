@@ -173,13 +173,13 @@ export class AiService {
     return this.mcqSetModel.find({ studentId }).select('-questions.correctAnswerIndex -questions.explanation').sort({ createdAt: -1 }).exec();
   }
 
-  // Returns the MCQ set WITHOUT correct answers — for taking the quiz
   async getMcqSetForQuiz(id: string, studentId: string) {
     const mcqSet = await this.mcqSetModel.findOne({ _id: id, studentId }).exec();
     if (!mcqSet) throw new NotFoundException('MCQ set not found');
 
-    const sanitized = mcqSet.toObject();
-    sanitized.questions = sanitized.questions.map((q: any) => ({
+    const plain = mcqSet.toObject();
+
+    const sanitizedQuestions = plain.questions.map((q: any) => ({
       question: q.question,
       options: q.options,
       difficulty: q.difficulty,
@@ -187,7 +187,12 @@ export class AiService {
       // correctAnswerIndex and explanation deliberately omitted
     }));
 
-    return sanitized;
+    return {
+      _id: plain._id,
+      studentId: plain.studentId,
+      title: plain.title,
+      questions: sanitizedQuestions,
+    };
   }
 
   async submitQuizAttempt(
