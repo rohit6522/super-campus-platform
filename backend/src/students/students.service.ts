@@ -54,4 +54,12 @@ export class StudentsService {
     }
     return String(student._id);
   }
+
+    async findByDepartmentAndSemester(departmentId: string, semester: number) {
+    return this.studentModel
+      .find({ departmentId, semester })
+      .populate('userId', 'name email')
+      .sort({ rollNumber: 1 })
+      .exec();
+  }
 }

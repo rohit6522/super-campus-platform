@@ -1,23 +1,28 @@
-'use client';
+"use client";
 
-import { useAuthStore } from '@/stores/auth-store';
-import { usePlacementStats, useAllDrives } from '@/hooks/queries/use-placement-dashboard';
-import { useRoleGuard } from '@/hooks/use-role-guard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useAuthStore } from "@/stores/auth-store";
+import {
+  usePlacementStats,
+  useAllDrives,
+} from "@/hooks/queries/use-placement-dashboard";
+import { useRoleGuard } from "@/hooks/use-role-guard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 export default function PlacementDashboardPage() {
-  useRoleGuard(['PLACEMENT_OFFICER']);
+  useRoleGuard(["PLACEMENT_OFFICER"]);
   const user = useAuthStore((state) => state.user);
   const { data: stats, isLoading: statsLoading } = usePlacementStats();
   const { data: drives, isLoading: drivesLoading } = useAllDrives();
 
   const statCards = [
-    { label: 'Total Drives', value: stats?.totalDrives },
-    { label: 'Total Applications', value: stats?.totalApplications },
-    { label: 'Students Selected', value: stats?.selectedCount },
-    { label: 'Avg Package (LPA)', value: stats?.averagePackageLPA },
-    { label: 'Highest Package (LPA)', value: stats?.highestPackageLPA },
+    { label: "Total Drives", value: stats?.totalDrives },
+    { label: "Total Applications", value: stats?.totalApplications },
+    { label: "Students Selected", value: stats?.selectedCount },
+    { label: "Avg Package (LPA)", value: stats?.averagePackageLPA },
+    { label: "Highest Package (LPA)", value: stats?.highestPackageLPA },
   ];
 
   return (
@@ -25,6 +30,13 @@ export default function PlacementDashboardPage() {
       <div>
         <h1 className="text-2xl font-bold">Welcome, {user?.name}</h1>
         <p className="text-muted-foreground">Placement overview</p>
+      </div>
+      <div className="flex gap-2 mt-3">
+        <Link href="/dashboard/placement/drives">
+          <Button variant="outline" size="sm">
+            Create Drive
+          </Button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -65,15 +77,18 @@ export default function PlacementDashboardPage() {
                       {drive.companyId?.name} — {drive.jobRole}
                     </p>
                     <p className="text-muted-foreground">
-                      {drive.packageLPA} LPA · Deadline:{' '}
-                      {new Date(drive.applicationDeadline).toLocaleDateString()} · {drive.status}
+                      {drive.packageLPA} LPA · Deadline:{" "}
+                      {new Date(drive.applicationDeadline).toLocaleDateString()}{" "}
+                      · {drive.status}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">No placement drives created yet.</p>
+            <p className="text-muted-foreground">
+              No placement drives created yet.
+            </p>
           )}
         </CardContent>
       </Card>

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { StudentsService } from './students.service.js';
 import { CreateStudentProfileDto } from './dto/create-student-profile.dto.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
@@ -28,5 +28,14 @@ export class StudentsController {
   @Roles(UserRole.STUDENT)
   getMyProfile(@CurrentUser() user: any) {
     return this.studentsService.findMyProfile(user.userId);
+  }
+
+    @Get('by-class')
+  @Roles(UserRole.FACULTY, UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.HOD)
+  findByClass(
+    @Query('departmentId') departmentId: string,
+    @Query('semester') semester: string,
+  ) {
+    return this.studentsService.findByDepartmentAndSemester(departmentId, parseInt(semester, 10));
   }
 }

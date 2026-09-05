@@ -4,14 +4,19 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useFacultyProfile, useMySubjects } from '@/hooks/queries/use-faculty-dashboard';
 import { useRoleGuard } from '@/hooks/use-role-guard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import Link from 'next/link';
 
 export default function FacultyDashboardPage() {
   useRoleGuard(['FACULTY']);
   const user = useAuthStore((state) => state.user);
-  // ...rest stays exactly the same
 
-  const { data: profile, isLoading: profileLoading, isError: profileError } = useFacultyProfile();
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    isError: profileError,
+  } = useFacultyProfile();
   const { data: subjects, isLoading: subjectsLoading } = useMySubjects();
 
   if (profileError) {
@@ -34,14 +39,34 @@ export default function FacultyDashboardPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Welcome, {user?.name}</h1>
+
         {profileLoading ? (
           <Skeleton className="h-4 w-64 mt-1" />
         ) : (
           <p className="text-muted-foreground">
-            {profile?.designation} · {profile?.departmentId?.name} ({profile?.departmentId?.code}) ·
-            Employee ID: {profile?.employeeId}
+            {profile?.designation} · {profile?.departmentId?.name} (
+            {profile?.departmentId?.code}) · Employee ID: {profile?.employeeId}
           </p>
         )}
+
+        <div className="flex gap-2 mt-3">
+          <Link href="/dashboard/faculty/attendance">
+            <Button variant="outline" size="sm">
+              Take Attendance
+            </Button>
+          </Link>
+          <Link href="/dashboard/faculty/assignments">
+            <Button variant="outline" size="sm">
+              Create Assignment
+            </Button>
+          </Link>
+                    <Link href="/dashboard/faculty/exams">
+            <Button variant="outline" size="sm">
+              Exams & Results
+            </Button>
+          </Link>
+        </div>
+        
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -89,7 +114,8 @@ export default function FacultyDashboardPage() {
                   <div>
                     <p className="font-medium">{subject.name}</p>
                     <p className="text-muted-foreground">
-                      {subject.code} · {subject.credits} credits · Semester {subject.semester}
+                      {subject.code} · {subject.credits} credits · Semester{' '}
+                      {subject.semester}
                     </p>
                   </div>
                   <span className="text-muted-foreground">{subject.departmentId?.code}</span>
