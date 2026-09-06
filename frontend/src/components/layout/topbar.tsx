@@ -160,8 +160,8 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem disabled>
-              <User size={14} className="mr-2" /> Profile (soon)
+                       <DropdownMenuItem onClick={() => router.push('/dashboard/profile')}>
+              <User size={14} className="mr-2" /> Profile
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
