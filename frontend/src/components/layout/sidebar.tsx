@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useAuthStore } from '@/stores/auth-store';
 import {
   LayoutDashboard,
   CalendarCheck,
@@ -26,14 +27,17 @@ import {
   QrCode,
   ChevronLeft,
   ChevronRight,
-  GraduationCap as Logo,
+  Users,
+  Building2,
+  Megaphone,
+  ClipboardCheck,
+  PenSquare,
 } from 'lucide-react';
 
 interface NavItem {
   label: string;
   href: string;
   icon: React.ElementType;
-  badge?: string;
   disabled?: boolean;
 }
 
@@ -42,11 +46,8 @@ interface NavSection {
   items: NavItem[];
 }
 
-const sections: NavSection[] = [
-  {
-    title: '',
-    items: [{ label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard }],
-  },
+const studentSections: NavSection[] = [
+  { title: '', items: [{ label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard }] },
   {
     title: 'Student & Academics',
     items: [
@@ -91,14 +92,102 @@ const sections: NavSection[] = [
   },
   {
     title: 'Smart Tech & Biometrics',
+    items: [{ label: 'Dynamic QR Attendance', href: '/dashboard/qr-attendance', icon: QrCode, disabled: true }],
+  },
+];
+
+const facultySections: NavSection[] = [
+  { title: '', items: [{ label: 'Dashboard', href: '/dashboard/faculty', icon: LayoutDashboard }] },
+  {
+    title: 'Teaching',
     items: [
-      { label: 'Dynamic QR Attendance', href: '/dashboard/qr-attendance', icon: QrCode, disabled: true },
+      { label: 'Take Attendance', href: '/dashboard/faculty/attendance', icon: CalendarCheck },
+      { label: 'Assignments & Grading', href: '/dashboard/faculty/assignments', icon: PenSquare },
+      { label: 'Exams & Results', href: '/dashboard/faculty/exams', icon: ClipboardCheck },
+    ],
+  },
+  {
+    title: 'DSA Platform',
+    items: [{ label: 'Manage Coding Problems', href: '/dashboard/admin/coding-problems', icon: Code2 }],
+  },
+];
+
+const hodSections: NavSection[] = [
+  { title: '', items: [{ label: 'Dashboard', href: '/dashboard/hod', icon: LayoutDashboard }] },
+  {
+    title: 'Teaching',
+    items: [
+      { label: 'Take Attendance', href: '/dashboard/faculty/attendance', icon: CalendarCheck },
+      { label: 'Assignments & Grading', href: '/dashboard/faculty/assignments', icon: PenSquare },
+      { label: 'Exams & Results', href: '/dashboard/faculty/exams', icon: ClipboardCheck },
     ],
   },
 ];
 
+const placementSections: NavSection[] = [
+  { title: '', items: [{ label: 'Dashboard', href: '/dashboard/placement', icon: LayoutDashboard }] },
+  {
+    title: 'Placement Management',
+    items: [
+      { label: 'Companies', href: '/dashboard/admin/companies', icon: Building2 },
+      { label: 'Create Drive', href: '/dashboard/placement/drives', icon: Briefcase },
+    ],
+  },
+];
+
+const adminSections: NavSection[] = [
+  { title: '', items: [{ label: 'Dashboard', href: '/dashboard/admin', icon: LayoutDashboard }] },
+  {
+    title: 'Academic Management',
+    items: [
+      { label: 'Departments', href: '/dashboard/admin/departments', icon: Building2 },
+      { label: 'Subjects', href: '/dashboard/admin/subjects', icon: BookOpen },
+    ],
+  },
+  {
+    title: 'Placement Management',
+    items: [
+      { label: 'Companies', href: '/dashboard/admin/companies', icon: Building2 },
+    ],
+  },
+  {
+    title: 'Platform',
+    items: [
+      { label: 'Coding Problems', href: '/dashboard/admin/coding-problems', icon: Code2 },
+      { label: 'Announcements', href: '/dashboard/admin/announcements', icon: Megaphone },
+    ],
+  },
+  {
+    title: 'Coming Soon',
+    items: [
+      { label: 'User Management', href: '/dashboard/admin/users', icon: Users, disabled: true },
+      { label: 'Audit Logs', href: '/dashboard/admin/audit-logs', icon: FileText, disabled: true },
+    ],
+  },
+];
+
+function getSectionsForRole(role?: string): NavSection[] {
+  switch (role) {
+    case 'STUDENT':
+      return studentSections;
+    case 'FACULTY':
+      return facultySections;
+    case 'HOD':
+      return hodSections;
+    case 'PLACEMENT_OFFICER':
+      return placementSections;
+    case 'ADMIN':
+    case 'SUPER_ADMIN':
+      return adminSections;
+    default:
+      return studentSections;
+  }
+}
+
 export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const pathname = usePathname();
+  const role = useAuthStore((state) => state.user?.role);
+  const sections = getSectionsForRole(role);
 
   return (
     <aside
@@ -107,12 +196,11 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
       }`}
     >
       <div className="flex h-full flex-col">
-        {/* Logo + collapse toggle */}
         <div className="flex items-center justify-between border-b p-4">
           {!collapsed && (
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <Logo size={18} />
+                <GraduationCap size={18} />
               </div>
               <div>
                 <p className="text-sm font-bold leading-tight">CampusOS</p>
@@ -120,16 +208,11 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
               </div>
             </div>
           )}
-          <button
-            onClick={onToggle}
-            className="rounded-md p-1.5 hover:bg-muted"
-            aria-label="Toggle sidebar"
-          >
+          <button onClick={onToggle} className="rounded-md p-1.5 hover:bg-muted" aria-label="Toggle sidebar">
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
         </div>
 
-        {/* Nav sections */}
         <nav className="flex-1 space-y-4 overflow-y-auto p-3">
           {sections.map((section, i) => (
             <div key={i}>
@@ -151,9 +234,7 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
                         title="Coming soon"
                       >
                         <Icon size={16} />
-                        {!collapsed && (
-                          <span className="flex-1 truncate">{item.label}</span>
-                        )}
+                        {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
                         {!collapsed && (
                           <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px]">Soon</span>
                         )}
@@ -166,18 +247,11 @@ export function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle:
                       key={item.href}
                       href={item.href}
                       className={`flex items-center gap-2 rounded-md px-2 py-2 text-sm transition-colors ${
-                        isActive
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-foreground hover:bg-muted'
+                        isActive ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'
                       }`}
                     >
                       <Icon size={16} />
                       {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
-                      {!collapsed && item.badge && (
-                        <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px]">
-                          {item.badge}
-                        </span>
-                      )}
                     </Link>
                   );
                 })}
