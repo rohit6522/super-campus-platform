@@ -33,6 +33,7 @@ import { AdminModule } from './admin/admin.module.js';
 import { CodingModule } from './coding/coding.module.js';
 import { AiModule } from './ai/ai.module.js';
 import { AnnouncementsModule } from './announcements/announcements.module.js';
+import { SearchModule } from './search/search.module.js';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { AnnouncementsModule } from './announcements/announcements.module.js';
     CodingModule,
     AiModule,
     AnnouncementsModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
