@@ -718,7 +718,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$b
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ui/dropdown-menu.tsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
-'use client';
+"use client";
 ;
 ;
 ;
@@ -732,7 +732,7 @@ var _s = __turbopack_context__.k.signature();
 const typeIcons = {
     subject: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"],
     company: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$briefcase$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Briefcase$3e$__["Briefcase"],
-    'coding-problem': __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$code$2d$xml$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Code2$3e$__["Code2"],
+    "coding-problem": __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$code$2d$xml$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Code2$3e$__["Code2"],
     announcement: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$megaphone$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Megaphone$3e$__["Megaphone"]
 };
 function Topbar({ sidebarCollapsed }) {
@@ -745,12 +745,12 @@ function Topbar({ sidebarCollapsed }) {
     }["Topbar.useAuthStore[clearAuth]"]);
     const queryClient = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$QueryClientProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQueryClient"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
-    const [searchQuery, setSearchQuery] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [searchQuery, setSearchQuery] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [showResults, setShowResults] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const searchContainerRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     const { data: searchResults, isFetching: searchLoading } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useQuery"])({
         queryKey: [
-            'global-search',
+            "global-search",
             searchQuery
         ],
         queryFn: {
@@ -766,24 +766,24 @@ function Topbar({ sidebarCollapsed }) {
                     setShowResults(false);
                 }
             }
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener("mousedown", handleClickOutside);
             return ({
-                "Topbar.useEffect": ()=>document.removeEventListener('mousedown', handleClickOutside)
+                "Topbar.useEffect": ()=>document.removeEventListener("mousedown", handleClickOutside)
             })["Topbar.useEffect"];
         }
     }["Topbar.useEffect"], []);
     const handleLogout = ()=>{
         clearAuth();
         queryClient.clear();
-        router.push('/login');
+        router.push("/login");
     };
     const handleResultClick = (href)=>{
         setShowResults(false);
-        setSearchQuery('');
+        setSearchQuery("");
         router.push(href);
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
-        className: `sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-6 transition-all duration-200 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`,
+        className: `sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-6 transition-all duration-200 ${sidebarCollapsed ? "ml-16" : "ml-64"}`,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 ref: searchContainerRef,
@@ -794,7 +794,7 @@ function Topbar({ sidebarCollapsed }) {
                         className: "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/topbar.tsx",
-                        lineNumber: 74,
+                        lineNumber: 89,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -808,7 +808,7 @@ function Topbar({ sidebarCollapsed }) {
                         onFocus: ()=>setShowResults(true)
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/topbar.tsx",
-                        lineNumber: 75,
+                        lineNumber: 93,
                         columnNumber: 9
                     }, this),
                     showResults && searchQuery.trim().length >= 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -818,7 +818,7 @@ function Topbar({ sidebarCollapsed }) {
                             children: "Searching..."
                         }, void 0, false, {
                             fileName: "[project]/src/components/layout/topbar.tsx",
-                            lineNumber: 89,
+                            lineNumber: 107,
                             columnNumber: 15
                         }, this) : searchResults && searchResults.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "max-h-80 overflow-y-auto py-1",
@@ -833,7 +833,7 @@ function Topbar({ sidebarCollapsed }) {
                                             className: "text-muted-foreground"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/layout/topbar.tsx",
-                                            lineNumber: 100,
+                                            lineNumber: 118,
                                             columnNumber: 23
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -843,7 +843,7 @@ function Topbar({ sidebarCollapsed }) {
                                                     children: result.title
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/layout/topbar.tsx",
-                                                    lineNumber: 102,
+                                                    lineNumber: 120,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -851,43 +851,43 @@ function Topbar({ sidebarCollapsed }) {
                                                     children: result.subtitle
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/layout/topbar.tsx",
-                                                    lineNumber: 103,
+                                                    lineNumber: 121,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/layout/topbar.tsx",
-                                            lineNumber: 101,
+                                            lineNumber: 119,
                                             columnNumber: 23
                                         }, this)
                                     ]
                                 }, `${result.type}-${result.id}`, true, {
                                     fileName: "[project]/src/components/layout/topbar.tsx",
-                                    lineNumber: 95,
+                                    lineNumber: 113,
                                     columnNumber: 21
                                 }, this);
                             })
                         }, void 0, false, {
                             fileName: "[project]/src/components/layout/topbar.tsx",
-                            lineNumber: 91,
+                            lineNumber: 109,
                             columnNumber: 15
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             className: "p-3 text-sm text-muted-foreground",
                             children: "No results found."
                         }, void 0, false, {
                             fileName: "[project]/src/components/layout/topbar.tsx",
-                            lineNumber: 110,
+                            lineNumber: 130,
                             columnNumber: 15
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/layout/topbar.tsx",
-                        lineNumber: 87,
+                        lineNumber: 105,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/layout/topbar.tsx",
-                lineNumber: 73,
+                lineNumber: 88,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -902,35 +902,34 @@ function Topbar({ sidebarCollapsed }) {
                                 size: 14
                             }, void 0, false, {
                                 fileName: "[project]/src/components/layout/topbar.tsx",
-                                lineNumber: 118,
+                                lineNumber: 140,
                                 columnNumber: 11
                             }, this),
                             " Ask Campus AI"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/layout/topbar.tsx",
-                        lineNumber: 117,
+                        lineNumber: 139,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                         size: "sm",
                         variant: "outline",
                         className: "gap-1.5",
-                        disabled: true,
-                        title: "Coming soon",
+                        onClick: ()=>router.push("/dashboard/qr-attendance"),
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$qr$2d$code$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__QrCode$3e$__["QrCode"], {
                                 size: 14
                             }, void 0, false, {
                                 fileName: "[project]/src/components/layout/topbar.tsx",
-                                lineNumber: 121,
+                                lineNumber: 148,
                                 columnNumber: 11
                             }, this),
                             " QR Check-in"
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/layout/topbar.tsx",
-                        lineNumber: 120,
+                        lineNumber: 142,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenu"], {
@@ -944,25 +943,25 @@ function Topbar({ sidebarCollapsed }) {
                                             size: 18
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/layout/topbar.tsx",
-                                            lineNumber: 127,
+                                            lineNumber: 154,
                                             columnNumber: 15
                                         }, this),
                                         announcements && announcements.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             className: "absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/layout/topbar.tsx",
-                                            lineNumber: 129,
+                                            lineNumber: 156,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/layout/topbar.tsx",
-                                    lineNumber: 126,
+                                    lineNumber: 153,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/layout/topbar.tsx",
-                                lineNumber: 125,
+                                lineNumber: 152,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -974,12 +973,12 @@ function Topbar({ sidebarCollapsed }) {
                                         children: "Notifications"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/layout/topbar.tsx",
-                                        lineNumber: 134,
+                                        lineNumber: 161,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
                                         fileName: "[project]/src/components/layout/topbar.tsx",
-                                        lineNumber: 135,
+                                        lineNumber: 162,
                                         columnNumber: 13
                                     }, this),
                                     announcements && announcements.length > 0 ? announcements.map((a)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -990,7 +989,7 @@ function Topbar({ sidebarCollapsed }) {
                                                     children: a.title
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/layout/topbar.tsx",
-                                                    lineNumber: 139,
+                                                    lineNumber: 169,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -998,32 +997,32 @@ function Topbar({ sidebarCollapsed }) {
                                                     children: a.content
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/layout/topbar.tsx",
-                                                    lineNumber: 140,
+                                                    lineNumber: 170,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, a._id, true, {
                                             fileName: "[project]/src/components/layout/topbar.tsx",
-                                            lineNumber: 138,
+                                            lineNumber: 165,
                                             columnNumber: 17
                                         }, this)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "px-3 py-2 text-sm text-muted-foreground",
                                         children: "No new notifications."
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/layout/topbar.tsx",
-                                        lineNumber: 144,
+                                        lineNumber: 176,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/layout/topbar.tsx",
-                                lineNumber: 133,
+                                lineNumber: 160,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/layout/topbar.tsx",
-                        lineNumber: 124,
+                        lineNumber: 151,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenu"], {
@@ -1035,10 +1034,10 @@ function Topbar({ sidebarCollapsed }) {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "flex h-8 w-8 items-center justify-center rounded-full bg-muted text-sm font-medium",
-                                            children: user?.name?.charAt(0) ?? '?'
+                                            children: user?.name?.charAt(0) ?? "?"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/layout/topbar.tsx",
-                                            lineNumber: 152,
+                                            lineNumber: 186,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1049,7 +1048,7 @@ function Topbar({ sidebarCollapsed }) {
                                                     children: user?.name
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/layout/topbar.tsx",
-                                                    lineNumber: 156,
+                                                    lineNumber: 190,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1057,13 +1056,13 @@ function Topbar({ sidebarCollapsed }) {
                                                     children: user?.role
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/layout/topbar.tsx",
-                                                    lineNumber: 157,
+                                                    lineNumber: 193,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/layout/topbar.tsx",
-                                            lineNumber: 155,
+                                            lineNumber: 189,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
@@ -1071,18 +1070,18 @@ function Topbar({ sidebarCollapsed }) {
                                             className: "text-muted-foreground"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/layout/topbar.tsx",
-                                            lineNumber: 159,
+                                            lineNumber: 197,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/layout/topbar.tsx",
-                                    lineNumber: 151,
+                                    lineNumber: 185,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/layout/topbar.tsx",
-                                lineNumber: 150,
+                                lineNumber: 184,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -1090,26 +1089,26 @@ function Topbar({ sidebarCollapsed }) {
                                 className: "w-48",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
-                                        onClick: ()=>router.push('/dashboard/profile'),
+                                        onClick: ()=>router.push("/dashboard/profile"),
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__["User"], {
                                                 size: 14,
                                                 className: "mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/layout/topbar.tsx",
-                                                lineNumber: 164,
+                                                lineNumber: 202,
                                                 columnNumber: 15
                                             }, this),
                                             " Profile"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/layout/topbar.tsx",
-                                        lineNumber: 163,
-                                        columnNumber: 24
+                                        lineNumber: 201,
+                                        columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
                                         fileName: "[project]/src/components/layout/topbar.tsx",
-                                        lineNumber: 166,
+                                        lineNumber: 204,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -1120,42 +1119,42 @@ function Topbar({ sidebarCollapsed }) {
                                                 className: "mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/layout/topbar.tsx",
-                                                lineNumber: 168,
+                                                lineNumber: 206,
                                                 columnNumber: 15
                                             }, this),
                                             " Logout"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/layout/topbar.tsx",
-                                        lineNumber: 167,
+                                        lineNumber: 205,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/layout/topbar.tsx",
-                                lineNumber: 162,
+                                lineNumber: 200,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/layout/topbar.tsx",
-                        lineNumber: 149,
+                        lineNumber: 183,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/layout/topbar.tsx",
-                lineNumber: 116,
+                lineNumber: 138,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/layout/topbar.tsx",
-        lineNumber: 68,
+        lineNumber: 83,
         columnNumber: 5
     }, this);
 }
-_s(Topbar, "H2hO8BeXHRnOQxSv/rhbERaNCKY=", false, function() {
+_s(Topbar, "LkrrfT2DSbWt08KBMdRWulX4UbE=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$stores$2f$auth$2d$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuthStore"],
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$stores$2f$auth$2d$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuthStore"],
