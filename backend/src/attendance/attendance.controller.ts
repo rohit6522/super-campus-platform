@@ -55,4 +55,17 @@ export class AttendanceController {
     const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
     return this.attendanceService.getStudentOverallAttendance(studentId);
   }
+
+    @Post('sessions/:sessionId/qr/generate')
+  @Roles(UserRole.FACULTY)
+  async generateQr(@CurrentUser() user: any, @Param('sessionId') sessionId: string) {
+    return this.attendanceService.generateQrToken(sessionId, user.userId);
+  }
+
+  @Post('qr/scan')
+  @Roles(UserRole.STUDENT)
+  async scanQr(@CurrentUser() user: any, @Body('token') token: string) {
+    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
+    return this.attendanceService.scanQrCode(studentId, token);
+  }
 }

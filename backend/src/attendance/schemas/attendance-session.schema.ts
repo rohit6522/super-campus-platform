@@ -22,6 +22,12 @@ export class AttendanceSession {
 
   @Prop({ default: false })
   isFinalized: boolean; // true once faculty submits marks (prevents further edits, unless explicitly reopened)
+
+    @Prop({ type: String, default: null })
+  qrToken?: string | null;
+
+  @Prop({ type: Date, default: null })
+  qrTokenExpiresAt?: Date | null;
 }
 
 export const AttendanceSessionSchema = SchemaFactory.createForClass(AttendanceSession);
