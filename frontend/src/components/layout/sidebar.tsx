@@ -92,7 +92,7 @@ const studentSections: NavSection[] = [
   },
   {
     title: 'Smart Tech & Biometrics',
-    items: [{ label: 'Dynamic QR Attendance', href: '/dashboard/qr-attendance', icon: QrCode, disabled: true }],
+        items: [{ label: 'Dynamic QR Attendance', href: '/dashboard/qr-attendance', icon: QrCode }],
   },
 ];
 

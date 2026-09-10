@@ -1,13 +1,20 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRoleGuard } from '@/hooks/use-role-guard';
-import { useMySubjectsForAttendance, useStudentsByClass, useCreateSession, useMarkAttendance } from '@/hooks/queries/use-faculty-attendance';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useRoleGuard } from "@/hooks/use-role-guard";
+import {
+  useMySubjectsForAttendance,
+  useStudentsByClass,
+  useCreateSession,
+  useMarkAttendance,
+} from "@/hooks/queries/use-faculty-attendance";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { QRCodeSVG } from "qrcode.react";
+import { generateQrToken } from "@/lib/api/qr-attendance";
+import { useState, useEffect } from "react";
 
 interface Subject {
   _id: string;
@@ -18,20 +25,26 @@ interface Subject {
 }
 
 export default function FacultyAttendancePage() {
-  useRoleGuard(['FACULTY']);
+  useRoleGuard(["FACULTY"]);
 
-  const { data: subjects, isLoading: subjectsLoading } = useMySubjectsForAttendance();
+  const { data: subjects, isLoading: subjectsLoading } =
+    useMySubjectsForAttendance();
   const createSessionMutation = useCreateSession();
   const markMutation = useMarkAttendance();
 
-  const [selectedSubjectId, setSelectedSubjectId] = useState('');
+  const [selectedSubjectId, setSelectedSubjectId] = useState("");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [statuses, setStatuses] = useState<Record<string, 'PRESENT' | 'ABSENT'>>({});
+  const [statuses, setStatuses] = useState<
+    Record<string, "PRESENT" | "ABSENT">
+  >({});
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
-  const selectedSubject: Subject | undefined = subjects?.find((s: Subject) => s._id === selectedSubjectId);
+  const [qrToken, setQrToken] = useState<string | null>(null);
+  const [qrMode, setQrMode] = useState(false);
+  const selectedSubject: Subject | undefined = subjects?.find(
+    (s: Subject) => s._id === selectedSubjectId,
+  );
 
   const { data: students, isLoading: studentsLoading } = useStudentsByClass(
     selectedSubject?.departmentId?._id,
@@ -50,20 +63,20 @@ export default function FacultyAttendancePage() {
       });
       setSessionId(session._id);
       // default everyone to PRESENT to start — faculty can flip absentees
-      const defaults: Record<string, 'PRESENT' | 'ABSENT'> = {};
+      const defaults: Record<string, "PRESENT" | "ABSENT"> = {};
       students?.forEach((s: any) => {
-        defaults[s._id] = 'PRESENT';
+        defaults[s._id] = "PRESENT";
       });
       setStatuses(defaults);
     } catch {
-      setError('Failed to create attendance session.');
+      setError("Failed to create attendance session.");
     }
   };
 
   const toggleStatus = (studentId: string) => {
     setStatuses((prev) => ({
       ...prev,
-      [studentId]: prev[studentId] === 'PRESENT' ? 'ABSENT' : 'PRESENT',
+      [studentId]: prev[studentId] === "PRESENT" ? "ABSENT" : "PRESENT",
     }));
   };
 
@@ -72,19 +85,40 @@ export default function FacultyAttendancePage() {
     setError(null);
     setSuccess(false);
     try {
-      const records = Object.entries(statuses).map(([studentId, status]) => ({ studentId, status }));
+      const records = Object.entries(statuses).map(([studentId, status]) => ({
+        studentId,
+        status,
+      }));
       await markMutation.mutateAsync({ sessionId, records });
       setSuccess(true);
     } catch {
-      setError('Failed to submit attendance. The session may already be finalized.');
+      setError(
+        "Failed to submit attendance. The session may already be finalized.",
+      );
     }
   };
+
+  useEffect(() => {
+    if (!qrMode || !sessionId) return;
+
+    const refreshToken = async () => {
+      const result = await generateQrToken(sessionId);
+      setQrToken(result.token);
+    };
+
+    refreshToken(); // generate immediately
+    const interval = setInterval(refreshToken, 14000); // refresh just before the 15s expiry
+
+    return () => clearInterval(interval);
+  }, [qrMode, sessionId]);
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Take Attendance</h1>
-        <p className="text-muted-foreground">Create a session and mark attendance for your class</p>
+        <p className="text-muted-foreground">
+          Create a session and mark attendance for your class
+        </p>
       </div>
 
       <Card>
@@ -119,7 +153,12 @@ export default function FacultyAttendancePage() {
             </div>
             <div className="space-y-2">
               <Label>Date</Label>
-              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} disabled={!!sessionId} />
+              <Input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                disabled={!!sessionId}
+              />
             </div>
           </div>
 
@@ -128,7 +167,9 @@ export default function FacultyAttendancePage() {
               onClick={handleCreateSession}
               disabled={!selectedSubjectId || createSessionMutation.isPending}
             >
-              {createSessionMutation.isPending ? 'Creating...' : 'Start Attendance Session'}
+              {createSessionMutation.isPending
+                ? "Creating..."
+                : "Start Attendance Session"}
             </Button>
           )}
         </CardContent>
@@ -140,6 +181,30 @@ export default function FacultyAttendancePage() {
             <CardTitle>2. Mark Attendance</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
+            <div className="flex items-center justify-between rounded-md border p-3">
+              <div>
+                <p className="text-sm font-medium">QR Check-in Mode</p>
+                <p className="text-xs text-muted-foreground">
+                  Display a QR code students can scan to self check-in
+                </p>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setQrMode((prev) => !prev)}
+              >
+                {qrMode ? "Stop QR Mode" : "Start QR Mode"}
+              </Button>
+            </div>
+
+            {qrMode && qrToken && (
+              <div className="flex flex-col items-center gap-2 rounded-md border bg-muted/30 p-6">
+                <QRCodeSVG value={qrToken} size={220} />
+                <p className="text-xs text-muted-foreground">
+                  Refreshes automatically every 15 seconds
+                </p>
+              </div>
+            )}
             {studentsLoading ? (
               <Skeleton className="h-48 w-full" />
             ) : students && students.length > 0 ? (
@@ -151,28 +216,36 @@ export default function FacultyAttendancePage() {
                   >
                     <div>
                       <p className="font-medium">{student.rollNumber}</p>
-                      <p className="text-sm text-muted-foreground">{student.userId?.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {student.userId?.name}
+                      </p>
                     </div>
                     <button
                       type="button"
                       onClick={() => toggleStatus(student._id)}
                       className={`rounded-full px-4 py-1 text-sm font-medium ${
-                        statuses[student._id] === 'PRESENT'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
+                        statuses[student._id] === "PRESENT"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
                       }`}
                     >
-                      {statuses[student._id] ?? 'PRESENT'}
+                      {statuses[student._id] ?? "PRESENT"}
                     </button>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground">No students found for this department/semester.</p>
+              <p className="text-muted-foreground">
+                No students found for this department/semester.
+              </p>
             )}
 
             {error && <p className="text-sm text-destructive">{error}</p>}
-            {success && <p className="text-sm text-green-600">Attendance submitted successfully!</p>}
+            {success && (
+              <p className="text-sm text-green-600">
+                Attendance submitted successfully!
+              </p>
+            )}
 
             {!success && (
               <Button
@@ -180,7 +253,7 @@ export default function FacultyAttendancePage() {
                 disabled={markMutation.isPending || !students?.length}
                 className="w-full"
               >
-                {markMutation.isPending ? 'Submitting...' : 'Submit Attendance'}
+                {markMutation.isPending ? "Submitting..." : "Submit Attendance"}
               </Button>
             )}
           </CardContent>
