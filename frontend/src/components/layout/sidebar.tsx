@@ -100,10 +100,9 @@ const studentSections: NavSection[] = [
       { label: "ATS Resume Analyzer", href: "/dashboard/ats", icon: FileText },
       { label: "DSA Coding Arena", href: "/dashboard/coding", icon: Code2 },
       {
-        label: "AI Mock Interview Room",
-        href: "/dashboard/interview",
-        icon: MessageSquare,
-        disabled: true,
+        label: "AI Exam Study Planner",
+        href: "/dashboard/study-planner",
+        icon: Calendar,
       },
       {
         label: "Placement Statistics",
@@ -420,33 +419,42 @@ export function Sidebar({
                   {section.items.map((item) => {
                     const isActive = pathname === item.href;
                     const Icon = item.icon;
-
-                                      if (item.disabled) {
-                    const disabledContent = (
-                      <div
-                        className={`flex items-center gap-2 rounded-md py-2 text-sm text-muted-foreground/50 cursor-not-allowed ${
-                          collapsed ? 'justify-center px-0' : 'px-2'
-                        }`}
-                      >
-                        <Icon size={18} className="shrink-0" />
-                        {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
-                        {!collapsed && (
-                          <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px]">Soon</span>
-                        )}
-                      </div>
-                    );
-
-                    if (collapsed) {
-                      return (
-                        <Tooltip key={item.href}>
-                          <TooltipTrigger asChild>{disabledContent}</TooltipTrigger>
-                          <TooltipContent side="right">{item.label} (Coming soon)</TooltipContent>
-                        </Tooltip>
+                    if (item.disabled) {
+                      const disabledContent = (
+                        <div
+                          className={`flex items-center gap-2 rounded-md py-2 text-sm text-muted-foreground/50 cursor-not-allowed ${
+                            collapsed ? "justify-center px-0" : "px-2"
+                          }`}
+                        >
+                          <Icon size={18} className="shrink-0" />
+                          {!collapsed && (
+                            <span className="flex-1 truncate">
+                              {item.label}
+                            </span>
+                          )}
+                          {!collapsed && (
+                            <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px]">
+                              Soon
+                            </span>
+                          )}
+                        </div>
                       );
-                    }
 
-                    return <div key={item.href}>{disabledContent}</div>;
-                  }
+                      if (collapsed) {
+                        return (
+                          <Tooltip key={item.href}>
+                            <TooltipTrigger asChild>
+                              {disabledContent}
+                            </TooltipTrigger>
+                            <TooltipContent side="right">
+                              {item.label} (Coming soon)
+                            </TooltipContent>
+                          </Tooltip>
+                        );
+                      }
+
+                      return <div key={item.href}>{disabledContent}</div>;
+                    }
 
                     const linkContent = (
                       <Link

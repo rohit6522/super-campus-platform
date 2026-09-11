@@ -14,6 +14,9 @@ import { PdfMcqsProcessor } from './processors/pdf-mcqs.processor.js';
 import { AuthModule } from '../auth/auth.module.js';
 import { StudentsModule } from '../students/students.module.js';
 import { QueueModule } from '../queue/queue.module.js';
+import { StudyPlan, StudyPlanSchema } from './schemas/study-plan.schema.js';
+import { Exam, ExamSchema } from '../exams/schemas/exam.schema.js';
+import { Subject, SubjectSchema } from '../subjects/schemas/subject.schema.js';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { QueueModule } from '../queue/queue.module.js';
       { name: Note.name, schema: NoteSchema },
       { name: McqSet.name, schema: McqSetSchema },
       { name: QuizAttempt.name, schema: QuizAttemptSchema },
+      { name: StudyPlan.name, schema: StudyPlanSchema },
+      { name: Exam.name, schema: ExamSchema },
+      { name: Subject.name, schema: SubjectSchema },
     ]),
     QueueModule,
     BullModule.registerQueue({ name: 'pdf-notes' }, { name: 'pdf-mcqs' }),
@@ -33,4 +39,4 @@ import { QueueModule } from '../queue/queue.module.js';
   controllers: [AiController],
   exports: [GroqClient, AiService],
 })
-export class AiModule {}
+export class AiModule { }

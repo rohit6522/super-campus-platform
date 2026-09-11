@@ -592,15 +592,15 @@ function Sidebar({ collapsed, onToggle }) {
                                             const Icon = item.icon;
                                             if (item.disabled) {
                                                 const disabledContent = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: `flex items-center gap-2 rounded-md py-2 text-sm text-muted-foreground/50 cursor-not-allowed ${collapsed ? 'justify-center px-0' : 'px-2'}`,
+                                                    className: `flex items-center gap-2 rounded-md py-2 text-sm text-muted-foreground/50 cursor-not-allowed ${collapsed ? "justify-center px-0" : "px-2"}`,
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Icon, {
                                                             size: 18,
                                                             className: "shrink-0"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                            lineNumber: 431,
-                                                            columnNumber: 25
+                                                            lineNumber: 430,
+                                                            columnNumber: 27
                                                         }, this),
                                                         !collapsed && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             className: "flex-1 truncate",
@@ -608,21 +608,21 @@ function Sidebar({ collapsed, onToggle }) {
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/layout/sidebar.tsx",
                                                             lineNumber: 432,
-                                                            columnNumber: 40
+                                                            columnNumber: 29
                                                         }, this),
                                                         !collapsed && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             className: "rounded-full bg-muted px-1.5 py-0.5 text-[10px]",
                                                             children: "Soon"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                            lineNumber: 434,
-                                                            columnNumber: 27
+                                                            lineNumber: 437,
+                                                            columnNumber: 29
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                    lineNumber: 426,
-                                                    columnNumber: 23
+                                                    lineNumber: 425,
+                                                    columnNumber: 25
                                                 }, this);
                                                 if (collapsed) {
                                                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$tooltip$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tooltip"], {
@@ -632,8 +632,8 @@ function Sidebar({ collapsed, onToggle }) {
                                                                 children: disabledContent
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                                lineNumber: 442,
-                                                                columnNumber: 27
+                                                                lineNumber: 447,
+                                                                columnNumber: 29
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$tooltip$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TooltipContent"], {
                                                                 side: "right",
@@ -643,22 +643,22 @@ function Sidebar({ collapsed, onToggle }) {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                                lineNumber: 443,
-                                                                columnNumber: 27
+                                                                lineNumber: 450,
+                                                                columnNumber: 29
                                                             }, this)
                                                         ]
                                                     }, item.href, true, {
                                                         fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                        lineNumber: 441,
-                                                        columnNumber: 25
+                                                        lineNumber: 446,
+                                                        columnNumber: 27
                                                     }, this);
                                                 }
                                                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     children: disabledContent
                                                 }, item.href, false, {
                                                     fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                    lineNumber: 448,
-                                                    columnNumber: 28
+                                                    lineNumber: 457,
+                                                    columnNumber: 30
                                                 }, this);
                                             }
                                             const linkContent = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -670,7 +670,7 @@ function Sidebar({ collapsed, onToggle }) {
                                                         className: "shrink-0"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                        lineNumber: 461,
+                                                        lineNumber: 470,
                                                         columnNumber: 25
                                                     }, this),
                                                     !collapsed && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -678,13 +678,13 @@ function Sidebar({ collapsed, onToggle }) {
                                                         children: item.label
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                        lineNumber: 463,
+                                                        lineNumber: 472,
                                                         columnNumber: 27
                                                     }, this)
                                                 ]
                                             }, item.href, true, {
                                                 fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                lineNumber: 452,
+                                                lineNumber: 461,
                                                 columnNumber: 23
                                             }, this);
                                             if (collapsed) {
@@ -695,7 +695,7 @@ function Sidebar({ collapsed, onToggle }) {
                                                             children: linkContent
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                            lineNumber: 471,
+                                                            lineNumber: 480,
                                                             columnNumber: 27
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$tooltip$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TooltipContent"], {
@@ -703,13 +703,13 @@ function Sidebar({ collapsed, onToggle }) {
                                                             children: item.label
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                            lineNumber: 472,
+                                                            lineNumber: 481,
                                                             columnNumber: 27
                                                         }, this)
                                                     ]
                                                 }, item.href, true, {
                                                     fileName: "[project]/src/components/layout/sidebar.tsx",
-                                                    lineNumber: 470,
+                                                    lineNumber: 479,
                                                     columnNumber: 25
                                                 }, this);
                                             }

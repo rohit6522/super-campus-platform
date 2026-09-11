@@ -16,10 +16,13 @@ import type { PdfNotesJobData } from './processors/pdf-notes.processor.js';
 import { McqSet, McqSetDocument } from './schemas/mcq-set.schema.js';
 import { QuizAttempt, QuizAttemptDocument } from './schemas/quiz-attempt.schema.js';
 import type { PdfMcqsJobData } from './processors/pdf-mcqs.processor.js';
+import { StudyPlan, StudyPlanDocument } from './schemas/study-plan.schema.js';
+import { Exam, ExamDocument } from '../exams/schemas/exam.schema.js';
+import { Subject, SubjectDocument } from '../subjects/schemas/subject.schema.js';
 
 @Injectable()
 export class AiService {
-   constructor(
+  constructor(
     @InjectModel(AiDocument.name) private aiDocumentModel: Model<AiDocumentDocument>,
     @InjectModel(AiJob.name) private aiJobModel: Model<AiJobDocument>,
     @InjectModel(Note.name) private noteModel: Model<NoteDocument>,
@@ -27,8 +30,11 @@ export class AiService {
     @InjectModel(QuizAttempt.name) private quizAttemptModel: Model<QuizAttemptDocument>,
     @InjectQueue('pdf-notes') private pdfNotesQueue: Queue<PdfNotesJobData>,
     @InjectQueue('pdf-mcqs') private pdfMcqsQueue: Queue<PdfMcqsJobData>,
+    @InjectModel(StudyPlan.name) private studyPlanModel: Model<StudyPlanDocument>,
+    @InjectModel(Exam.name) private examModel: Model<ExamDocument>,
+    @InjectModel(Subject.name) private subjectModel: Model<SubjectDocument>,
     private groqClient: GroqClient,
-  ) {}
+  ) { }
 
   async addDocument(uploadedBy: string, dto: CreateDocumentDto): Promise<AiDocumentDocument> {
     const chunks = chunkText(dto.content).map((text, index) => ({ text, chunkIndex: index }));
@@ -140,7 +146,7 @@ export class AiService {
     return note;
   }
 
-    async uploadPdfForMcqs(
+  async uploadPdfForMcqs(
     studentId: string,
     fileBuffer: Buffer,
     fileName: string,
@@ -237,5 +243,67 @@ export class AiService {
       attempt,
       questions: mcqSet?.questions ?? [],
     };
+  }
+
+  async generateStudyPlan(
+    studentId: string,
+    departmentId: string,
+    semester: number,
+    availableHoursPerDay: number,
+    weakTopics: string[],
+  ): Promise<StudyPlanDocument> {
+    const [subjects, upcomingExams] = await Promise.all([
+      this.subjectModel.find({ departmentId, semester }).exec(),
+      this.examModel
+        .find({ departmentId, semester, date: { $gte: new Date() } })
+        .populate('subjectId', 'name')
+        .sort({ date: 1 })
+        .exec(),
+    ]);
+
+    const subjectList = subjects.map((s) => s.name).join(', ');
+    const examList = upcomingExams
+      .map((e) => `${(e.subjectId as any)?.name} — ${e.examType} on ${e.date.toDateString()}`)
+      .join('; ') || 'No exams scheduled yet';
+
+    const prompt = `You are an academic study planner. Create a realistic 7-day study schedule.
+
+Student has ${availableHoursPerDay} hours available per day for studying.
+Subjects: ${subjectList}
+Upcoming exams: ${examList}
+Weak topics (prioritize these): ${weakTopics.join(', ') || 'None specified'}
+
+Respond ONLY in valid JSON, no markdown, no code fences, matching exactly this shape:
+{
+  "summary": "a 2-3 sentence overview of the study strategy",
+  "priorityTopics": ["topic 1", "topic 2", ...],
+  "dailySchedule": [
+    { "day": "Monday", "subject": "subject name", "topic": "specific topic", "durationMinutes": 60, "priority": "HIGH" }
+  ]
+}
+Cover all 7 days (Monday through Sunday). Total daily minutes should not exceed ${availableHoursPerDay * 60}.`;
+
+    const response = await this.groqClient.chat([
+      { role: 'system', content: 'You output only valid JSON, nothing else.' },
+      { role: 'user', content: prompt },
+    ]);
+
+    const cleaned = response.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(cleaned);
+
+    const plan = new this.studyPlanModel({
+      studentId,
+      availableHoursPerDay,
+      weakTopics,
+      dailySchedule: parsed.dailySchedule,
+      priorityTopics: parsed.priorityTopics,
+      summary: parsed.summary,
+    });
+
+    return plan.save();
+  }
+
+  async getMyStudyPlans(studentId: string) {
+    return this.studyPlanModel.find({ studentId }).sort({ createdAt: -1 }).limit(10).exec();
   }
 }

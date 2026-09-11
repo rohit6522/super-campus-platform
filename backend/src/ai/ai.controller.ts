@@ -20,6 +20,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator.js';
 import { UserRole } from '../users/schemas/user.schema.js';
 import { StudentsService } from '../students/students.service.js';
 import { SubmitQuizDto } from './dto/submit-quiz.dto.js';
+import { GenerateStudyPlanDto } from './dto/generate-study-plan.dto.js';
 
 @Controller('ai')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -118,5 +119,25 @@ export class AiController {
   async getQuizResult(@CurrentUser() user: any, @Param('attemptId') attemptId: string) {
     const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
     return this.aiService.getQuizResult(attemptId, studentId);
+  }
+
+    @Post('study-plan')
+  @Roles(UserRole.STUDENT)
+  async generateStudyPlan(@CurrentUser() user: any, @Body() dto: GenerateStudyPlanDto) {
+    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
+    return this.aiService.generateStudyPlan(
+      studentId,
+      dto.departmentId,
+      dto.semester,
+      dto.availableHoursPerDay,
+      dto.weakTopics,
+    );
+  }
+
+  @Get('study-plans')
+  @Roles(UserRole.STUDENT)
+  async getMyStudyPlans(@CurrentUser() user: any) {
+    const studentId = await this.studentsService.findStudentIdByUserId(user.userId);
+    return this.aiService.getMyStudyPlans(studentId);
   }
 }
