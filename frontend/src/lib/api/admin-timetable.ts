@@ -33,6 +33,11 @@ export async function createTimetableEntry(data: CreateTimetableInput) {
   return response.data;
 }
 
+export async function updateTimetableEntry(id: string, data: Partial<CreateTimetableInput>) {
+  const response = await apiClient.patch<TimetableEntry>(`/timetable/${id}`, data);
+  return response.data;
+}
+
 export async function deleteTimetableEntry(id: string) {
   await apiClient.delete(`/timetable/${id}`);
 }

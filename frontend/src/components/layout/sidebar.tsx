@@ -292,17 +292,15 @@ const adminSections: NavSection[] = [
       { label: "Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
     ],
   },
-  {
-    title: "Academic Management",
+   {
+    title: 'Academic Management',
     items: [
-      {
-        label: "Departments",
-        href: "/dashboard/admin/departments",
-        icon: Building2,
-      },
-      { label: "Subjects", href: "/dashboard/admin/subjects", icon: BookOpen },
+      { label: 'Departments', href: '/dashboard/admin/departments', icon: Building2 },
+      { label: 'Subjects', href: '/dashboard/admin/subjects', icon: BookOpen },
+      { label: 'Timetable', href: '/dashboard/admin/timetable', icon: Calendar },
     ],
   },
+
   {
     title: "Placement Management",
     items: [
