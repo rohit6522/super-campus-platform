@@ -47,4 +47,8 @@ export class FacultyService {
       .populate('userId', 'name email')
       .exec();
   }
+
+    async findAllWithUser() {
+    return this.facultyModel.find().populate('userId', 'name email').exec();
+  }
 }

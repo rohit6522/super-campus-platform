@@ -84,7 +84,9 @@
     --color-red-500: #fb2c36;
     --color-red-600: #e40014;
     --color-red-700: #bf000f;
+    --color-amber-50: #fffbeb;
     --color-amber-600: #dd7400;
+    --color-amber-700: #b75000;
     --color-yellow-50: #fefce8;
     --color-yellow-500: #edb200;
     --color-yellow-600: #cd8900;
@@ -152,7 +154,9 @@
       --color-red-500: lab(55.4814% 75.0732 48.8528);
       --color-red-600: lab(48.4493% 77.4328 61.5452);
       --color-red-700: lab(40.4273% 67.2623 53.7441);
+      --color-amber-50: lab(98.6252% -.635982 8.42309);
       --color-amber-600: lab(60.3514% 40.5624 87.1228);
+      --color-amber-700: lab(47.2709% 42.9082 69.2966);
       --color-yellow-50: lab(98.6846% -1.79058 9.77662);
       --color-yellow-500: lab(76.3898% 14.5258 98.4589);
       --color-yellow-600: lab(62.7799% 22.4198 86.1544);
@@ -1157,6 +1161,10 @@
     border-color: #0000;
   }
 
+  .bg-amber-50 {
+    background-color: var(--color-amber-50);
+  }
+
   .bg-background {
     background-color: var(--background);
   }
@@ -1637,6 +1645,10 @@
 
   .text-amber-600 {
     color: var(--color-amber-600);
+  }
+
+  .text-amber-700 {
+    color: var(--color-amber-700);
   }
 
   .text-background {

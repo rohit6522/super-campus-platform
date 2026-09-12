@@ -28,4 +28,10 @@ export class FacultyController {
   findByDepartment(@Param('departmentId') departmentId: string) {
     return this.facultyService.findAllByDepartment(departmentId);
   }
+
+    @Get('all')
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.HOD)
+  async findAll() {
+    return this.facultyService.findAllWithUser();
+  }
 }
