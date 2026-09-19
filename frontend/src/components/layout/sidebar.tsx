@@ -292,12 +292,20 @@ const adminSections: NavSection[] = [
       { label: "Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
     ],
   },
-   {
-    title: 'Academic Management',
+  {
+    title: "Academic Management",
     items: [
-      { label: 'Departments', href: '/dashboard/admin/departments', icon: Building2 },
-      { label: 'Subjects', href: '/dashboard/admin/subjects', icon: BookOpen },
-      { label: 'Timetable', href: '/dashboard/admin/timetable', icon: Calendar },
+      {
+        label: "Departments",
+        href: "/dashboard/admin/departments",
+        icon: Building2,
+      },
+      { label: "Subjects", href: "/dashboard/admin/subjects", icon: BookOpen },
+      {
+        label: "Timetable",
+        href: "/dashboard/admin/timetable",
+        icon: Calendar,
+      },
     ],
   },
 
@@ -415,7 +423,14 @@ export function Sidebar({
                 )}
                 <div className="space-y-0.5">
                   {section.items.map((item) => {
-                    const isActive = pathname === item.href;
+                    const isActive =
+                      pathname === item.href ||
+                      (item.href !== "/dashboard" &&
+                        item.href !== "/dashboard/faculty" &&
+                        item.href !== "/dashboard/admin" &&
+                        item.href !== "/dashboard/hod" &&
+                        item.href !== "/dashboard/placement" &&
+                        pathname.startsWith(item.href + "/"));
                     const Icon = item.icon;
                     if (item.disabled) {
                       const disabledContent = (
