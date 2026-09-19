@@ -85,7 +85,7 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
         sidebarCollapsed ? "ml-16" : "ml-64"
       }`}
     >
-      <div ref={searchContainerRef} className="relative w-full max-w-md">
+           <div ref={searchContainerRef} className="relative hidden w-full max-w-md sm:block">
         <Search
           size={16}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
