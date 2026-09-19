@@ -221,6 +221,7 @@
     --leading-tight: 1.25;
     --leading-snug: 1.375;
     --radius-md: calc(var(--radius) * .8);
+    --animate-spin: spin 1s linear infinite;
     --animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;
     --blur-sm: 8px;
     --default-transition-duration: .15s;
@@ -979,6 +980,10 @@
 
   .animate-pulse {
     animation: var(--animate-pulse);
+  }
+
+  .animate-spin {
+    animation: var(--animate-spin);
   }
 
   .cursor-default {
@@ -3050,6 +3055,12 @@
 @property --tw-duration {
   syntax: "*";
   inherits: false
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse {
