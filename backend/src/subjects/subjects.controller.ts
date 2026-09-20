@@ -58,7 +58,7 @@ export class SubjectsController {
   }
 
   @Delete(':id')
-  @Roles(UserRole.SUPER_ADMIN)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   remove(@Param('id') id: string) {
     return this.subjectsService.remove(id);
   }

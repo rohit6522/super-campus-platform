@@ -1,35 +1,49 @@
-'use client';
+"use client";
 
-import { useAuthStore } from '@/stores/auth-store';
+import { useAuthStore } from "@/stores/auth-store";
 import {
   useStudentProfile,
   useMyAttendance,
   useMyCGPA,
   useMySubmissions,
   useMyTimetable,
-} from '@/hooks/queries/use-student-dashboard';
-import { useRoleGuard } from '@/hooks/use-role-guard';
-import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { CalendarCheck, GraduationCap, Briefcase, FileText, Clock, AlertTriangle } from 'lucide-react';
-import { useAnnouncements } from '@/hooks/queries/use-announcements';
-
+} from "@/hooks/queries/use-student-dashboard";
+import { useRoleGuard } from "@/hooks/use-role-guard";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  CalendarCheck,
+  GraduationCap,
+  Briefcase,
+  FileText,
+  Clock,
+  AlertTriangle,
+} from "lucide-react";
+import { useAnnouncements } from "@/hooks/queries/use-announcements";
 
 export default function DashboardPage() {
-  useRoleGuard(['STUDENT']);
+  useRoleGuard(["STUDENT"]);
   const user = useAuthStore((state) => state.user);
 
-  const { data: profile, isLoading: profileLoading, isError: profileError } = useStudentProfile();
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    isError: profileError,
+  } = useStudentProfile();
   const { data: attendance, isLoading: attendanceLoading } = useMyAttendance();
   const { data: cgpaData, isLoading: cgpaLoading } = useMyCGPA();
-  const { data: submissions, isLoading: submissionsLoading } = useMySubmissions();
+  const { data: submissions, isLoading: submissionsLoading } =
+    useMySubmissions();
   const { data: timetable, isLoading: timetableLoading } = useMyTimetable(
     profile?.departmentId?._id,
     profile?.semester,
   );
-    const { data: announcements, isLoading: announcementsLoading } = useAnnouncements(5);
+  const { data: announcements, isLoading: announcementsLoading } =
+    useAnnouncements(5);
   const pendingCount =
-    submissions?.filter((s: any) => s.status === 'SUBMITTED' || s.status === 'LATE').length ?? 0;
+    submissions?.filter(
+      (s: any) => s.status === "SUBMITTED" || s.status === "LATE",
+    ).length ?? 0;
 
   if (profileError) {
     return (
@@ -37,7 +51,8 @@ export default function DashboardPage() {
         <CardContent className="pt-6">
           <p className="font-medium">No student profile found</p>
           <p className="text-sm text-muted-foreground mt-1">
-            Your student profile hasn&apos;t been set up yet. Contact your admin, or create one via{' '}
+            Your student profile hasn&apos;t been set up yet. Contact your
+            admin, or create one via{" "}
             <code className="text-xs">POST /api/students/profile</code>.
           </p>
         </CardContent>
@@ -45,12 +60,15 @@ export default function DashboardPage() {
     );
   }
 
-  const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
-  const todaysClasses = timetable?.filter((entry) => entry.dayOfWeek === today) ?? [];
+  const today = new Date()
+    .toLocaleDateString("en-US", { weekday: "long" })
+    .toUpperCase();
+  const todaysClasses =
+    timetable?.filter((entry) => entry.dayOfWeek === today) ?? [];
 
   return (
     <div className="space-y-6">
-           {/* Welcome header */}
+      {/* Welcome header */}
       <Card>
         <CardContent className="pt-6">
           <span className="inline-block rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
@@ -63,8 +81,8 @@ export default function DashboardPage() {
             <Skeleton className="mt-2 h-4 w-64" />
           ) : (
             <p className="mt-1 text-muted-foreground">
-              Roll No: {profile?.rollNumber} · {profile?.departmentId?.name} · Semester{' '}
-              {profile?.semester}
+              Roll No: {profile?.rollNumber} · {profile?.departmentId?.name} ·
+              Semester {profile?.semester}
             </p>
           )}
         </CardContent>
@@ -84,17 +102,20 @@ export default function DashboardPage() {
             ) : (
               <>
                 <p className="mt-1 text-3xl font-bold">
-                  {attendance?.percentage ?? 0}%{' '}
+                  {attendance?.percentage ?? 0}%{" "}
                   <span
                     className={`text-sm font-medium ${
-                      (attendance?.percentage ?? 0) >= 75 ? 'text-green-600' : 'text-red-600'
+                      (attendance?.percentage ?? 0) >= 75
+                        ? "text-green-600"
+                        : "text-red-600"
                     }`}
                   >
-                    {(attendance?.percentage ?? 0) >= 75 ? '✓ Safe' : '⚠ Low'}
+                    {(attendance?.percentage ?? 0) >= 75 ? "✓ Safe" : "⚠ Low"}
                   </span>
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {attendance?.present ?? 0} of {attendance?.total ?? 0} classes attended
+                  {attendance?.present ?? 0} of {attendance?.total ?? 0} classes
+                  attended
                 </p>
               </>
             )}
@@ -114,7 +135,10 @@ export default function DashboardPage() {
             ) : (
               <>
                 <p className="mt-1 text-3xl font-bold">
-                  {cgpaData?.cgpa ?? 0} <span className="text-sm font-normal text-muted-foreground">/ 10.0</span>
+                  {cgpaData?.cgpa ?? 0}{" "}
+                  <span className="text-sm font-normal text-muted-foreground">
+                    / 10.0
+                  </span>
                 </p>
                 <p className="text-xs text-muted-foreground">
                   {cgpaData?.semesterHistory?.length ?? 0} semester(s) recorded
@@ -136,9 +160,13 @@ export default function DashboardPage() {
               <Skeleton className="mt-2 h-8 w-20" />
             ) : (
               <>
-                <p className="mt-1 text-3xl font-bold">{profile?.backlogs ?? 0}</p>
+                <p className="mt-1 text-3xl font-bold">
+                  {profile?.backlogs ?? 0}
+                </p>
                 <p className="text-xs text-muted-foreground">
-                  {(profile?.backlogs ?? 0) === 0 ? 'Clear record' : 'Needs attention'}
+                  {(profile?.backlogs ?? 0) === 0
+                    ? "Clear record"
+                    : "Needs attention"}
                 </p>
               </>
             )}
@@ -158,48 +186,87 @@ export default function DashboardPage() {
             ) : (
               <>
                 <p className="mt-1 text-3xl font-bold">
-                  {pendingCount} <span className="text-sm font-medium text-amber-600">Pending</span>
+                  {pendingCount}{" "}
+                  <span className="text-sm font-medium text-amber-600">
+                    Pending
+                  </span>
                 </p>
-                <p className="text-xs text-muted-foreground">Check submissions</p>
+                <p className="text-xs text-muted-foreground">
+                  Check submissions
+                </p>
               </>
             )}
           </CardContent>
         </Card>
       </div>
 
-      {/* Today's schedule */}
+      {/* Weekly timetable, Monday to Friday */}
       <Card>
         <CardContent className="pt-6">
-          <div className="mb-3 flex items-center gap-2">
+          <div className="mb-4 flex items-center gap-2">
             <Clock size={16} className="text-muted-foreground" />
-            <h2 className="font-semibold">Today&apos;s Schedule</h2>
+            <h2 className="font-semibold">Weekly Schedule (Mon–Fri)</h2>
           </div>
           {timetableLoading ? (
-            <Skeleton className="h-24 w-full" />
-          ) : todaysClasses.length > 0 ? (
-            <div className="space-y-2">
-              {todaysClasses.map((entry) => (
-                <div
-                  key={entry._id}
-                  className="flex items-center justify-between rounded-lg border p-3 text-sm"
-                >
-                  <div>
-                    <p className="font-medium">{entry.subjectId?.name}</p>
-                    <p className="text-muted-foreground">
-                      {entry.startTime} – {entry.endTime} · Room {entry.room} ·{' '}
-                      {entry.facultyId?.name}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <Skeleton className="h-64 w-full" />
           ) : (
-            <p className="text-sm text-muted-foreground">No classes scheduled for today.</p>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-5">
+              {["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"].map(
+                (day) => {
+                  const dayClasses =
+                    timetable
+                      ?.filter((e) => e.dayOfWeek === day)
+                      .sort((a, b) => a.startTime.localeCompare(b.startTime)) ??
+                    [];
+                  const isToday = day === today;
+
+                  return (
+                    <div
+                      key={day}
+                      className={`rounded-lg border p-3 ${isToday ? "border-primary bg-primary/5" : ""}`}
+                    >
+                      <p
+                        className={`mb-2 text-xs font-semibold uppercase tracking-wide ${
+                          isToday ? "text-primary" : "text-muted-foreground"
+                        }`}
+                      >
+                        {day.charAt(0) + day.slice(1).toLowerCase()}
+                        {isToday && " · Today"}
+                      </p>
+                      {dayClasses.length > 0 ? (
+                        <div className="space-y-2">
+                          {dayClasses.map((entry) => (
+                            <div
+                              key={entry._id}
+                              className="rounded-md bg-muted/40 p-2 text-xs"
+                            >
+                              <p className="font-medium">
+                                {entry.subjectId?.name}
+                              </p>
+                              <p className="text-muted-foreground">
+                                {entry.startTime}–{entry.endTime}
+                              </p>
+                              <p className="text-muted-foreground">
+                                Room {entry.room}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-muted-foreground">
+                          No classes
+                        </p>
+                      )}
+                    </div>
+                  );
+                },
+              )}
+            </div>
           )}
         </CardContent>
       </Card>
 
-           {/* Real notice board */}
+      {/* Real notice board */}
       <Card>
         <CardContent className="pt-6">
           <div className="mb-3 flex items-center gap-2">
@@ -214,17 +281,24 @@ export default function DashboardPage() {
                 <div key={a._id} className="rounded-lg border p-3 text-sm">
                   <div className="flex items-center justify-between">
                     <p className="font-medium">{a.title}</p>
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs">{a.category}</span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs">
+                      {a.category}
+                    </span>
                   </div>
-                  <p className="mt-1 text-muted-foreground line-clamp-2">{a.content}</p>
+                  <p className="mt-1 text-muted-foreground line-clamp-2">
+                    {a.content}
+                  </p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {a.postedBy?.name} · {new Date(a.createdAt).toLocaleDateString()}
+                    {a.postedBy?.name} ·{" "}
+                    {new Date(a.createdAt).toLocaleDateString()}
                   </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No announcements yet.</p>
+            <p className="text-sm text-muted-foreground">
+              No announcements yet.
+            </p>
           )}
         </CardContent>
       </Card>

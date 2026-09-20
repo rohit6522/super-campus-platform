@@ -29,6 +29,11 @@ export async function createSubject(data: CreateSubjectInput) {
   return response.data;
 }
 
+export async function updateSubject(id: string, data: Partial<CreateSubjectInput>) {
+  const response = await apiClient.patch<Subject>(`/subjects/${id}`, data);
+  return response.data;
+}
+
 export async function deleteSubject(id: string) {
   await apiClient.delete(`/subjects/${id}`);
 }
