@@ -3,19 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Search,
-  Bell,
-  Bot,
-  QrCode,
-  LogOut,
-  User,
-  ChevronDown,
-  BookOpen,
-  Briefcase,
-  Code2,
-  Megaphone,
-} from "lucide-react";
+import { Search, Bell, Bot, QrCode, LogOut, User, ChevronDown, BookOpen, Briefcase, Code2, Megaphone } from 'lucide-react';
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth-store";
 import { search as searchApi } from "@/lib/api/search";
@@ -28,6 +16,44 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+
+function getReadIds(): string[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem('read-announcements') ?? '[]');
+  } catch {
+    return [];
+  }
+}
+
+function setReadIds(ids: string[]) {
+  localStorage.setItem('read-announcements', JSON.stringify(ids));
+}
+
+
+
+const roleQuickActions: Record<string, { label: string; icon: any; href: string }[]> = {
+  STUDENT: [
+    { label: 'Ask Campus AI', icon: Bot, href: '/dashboard/ai-assistant' },
+    { label: 'QR Check-in', icon: QrCode, href: '/dashboard/qr-attendance' },
+  ],
+  FACULTY: [
+    { label: 'Take Attendance', icon: QrCode, href: '/dashboard/faculty/attendance' },
+  ],
+  HOD: [
+    { label: 'Take Attendance', icon: QrCode, href: '/dashboard/faculty/attendance' },
+  ],
+  ADMIN: [
+    { label: 'Post Announcement', icon: Megaphone, href: '/dashboard/admin/announcements' },
+  ],
+  SUPER_ADMIN: [
+    { label: 'Post Announcement', icon: Megaphone, href: '/dashboard/admin/announcements' },
+  ],
+  PLACEMENT_OFFICER: [
+    { label: 'Create Drive', icon: Briefcase, href: '/dashboard/placement/drives' },
+  ],
+};
 
 const typeIcons: Record<string, React.ElementType> = {
   subject: BookOpen,
@@ -52,7 +78,21 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
     enabled: searchQuery.trim().length >= 2,
   });
 
+    const [readIds, setReadIdsState] = useState<string[]>([]);
   const { data: announcements } = useAnnouncements(5);
+  useEffect(() => {
+    setReadIdsState(getReadIds());
+  }, []);
+
+  const unreadCount = announcements?.filter((a) => !readIds.includes(a._id)).length ?? 0;
+
+  const handleMarkAllRead = () => {
+    const allIds = announcements?.map((a) => a._id) ?? [];
+    setReadIds(allIds);
+    setReadIdsState(allIds);
+  };
+
+
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -136,46 +176,60 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button size="sm" variant="outline" className="gap-1.5">
-          <Bot size={14} /> Ask Campus AI
-        </Button>
-        <Button
-          size="sm"
-          variant="outline"
-          className="gap-1.5"
-          onClick={() => router.push("/dashboard/qr-attendance")}
-        >
-          <QrCode size={14} /> QR Check-in
-        </Button>
+               {(roleQuickActions[user?.role ?? ''] ?? []).map((action) => {
+          const Icon = action.icon;
+          return (
+            <Button
+              key={action.href}
+              size="sm"
+              variant="outline"
+              className="gap-1.5"
+              onClick={() => router.push(action.href)}
+            >
+              <Icon size={14} /> {action.label}
+            </Button>
+          );
+        })}
 
-        <DropdownMenu>
+                <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="relative rounded-full p-2 hover:bg-muted">
               <Bell size={18} />
-              {announcements && announcements.length > 0 && (
-                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
+              {unreadCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
               )}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
-            <div className="px-3 py-2 text-sm font-semibold">Notifications</div>
+            <div className="flex items-center justify-between px-3 py-2">
+              <span className="text-sm font-semibold">Notifications</span>
+              {unreadCount > 0 && (
+                <button
+                  onClick={handleMarkAllRead}
+                  className="text-xs font-medium text-primary hover:underline"
+                >
+                  Mark all as read
+                </button>
+              )}
+            </div>
             <DropdownMenuSeparator />
             {announcements && announcements.length > 0 ? (
-              announcements.map((a) => (
-                <DropdownMenuItem
-                  key={a._id}
-                  className="flex-col items-start gap-0.5 whitespace-normal"
-                >
-                  <p className="text-sm font-medium">{a.title}</p>
-                  <p className="text-xs text-muted-foreground line-clamp-2">
-                    {a.content}
-                  </p>
-                </DropdownMenuItem>
-              ))
+              announcements.map((a) => {
+                const isUnread = !readIds.includes(a._id);
+                return (
+                  <DropdownMenuItem key={a._id} className="flex-col items-start gap-0.5 whitespace-normal">
+                    <div className="flex w-full items-center gap-1.5">
+                      {isUnread && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                      <p className="text-sm font-medium">{a.title}</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2">{a.content}</p>
+                  </DropdownMenuItem>
+                );
+              })
             ) : (
-              <p className="px-3 py-2 text-sm text-muted-foreground">
-                No new notifications.
-              </p>
+              <p className="px-3 py-2 text-sm text-muted-foreground">No new notifications.</p>
             )}
           </DropdownMenuContent>
         </DropdownMenu>

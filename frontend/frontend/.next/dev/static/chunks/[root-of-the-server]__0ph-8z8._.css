@@ -559,6 +559,10 @@
     position: sticky;
   }
 
+  .-top-0\.5 {
+    top: calc(var(--spacing) * -.5);
+  }
+
   .top-0 {
     top: 0;
   }
@@ -573,6 +577,10 @@
 
   .top-11 {
     top: calc(var(--spacing) * 11);
+  }
+
+  .-right-0\.5 {
+    right: calc(var(--spacing) * -.5);
   }
 
   .right-1 {
@@ -777,6 +785,10 @@
     height: calc(var(--spacing) * 9);
   }
 
+  .h-1\.5 {
+    height: calc(var(--spacing) * 1.5);
+  }
+
   .h-2 {
     height: calc(var(--spacing) * 2);
   }
@@ -873,8 +885,16 @@
     min-height: 100vh;
   }
 
+  .w-1\.5 {
+    width: calc(var(--spacing) * 1.5);
+  }
+
   .w-2 {
     width: calc(var(--spacing) * 2);
+  }
+
+  .w-4 {
+    width: calc(var(--spacing) * 4);
   }
 
   .w-8 {
