@@ -1,18 +1,30 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useCreateProblem } from '@/hooks/queries/use-admin-coding';
-import { useRoleGuard } from '@/hooks/use-role-guard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import axios from 'axios';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCreateProblem } from "@/hooks/queries/use-admin-coding";
+import { useRoleGuard } from "@/hooks/use-role-guard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/get-error-message";
 
 const topicOptions = [
-  'ARRAYS', 'STRINGS', 'LINKED_LISTS', 'STACK', 'QUEUE', 'TREES',
-  'GRAPHS', 'DYNAMIC_PROGRAMMING', 'SORTING', 'SEARCHING', 'RECURSION', 'GREEDY',
+  "ARRAYS",
+  "STRINGS",
+  "LINKED_LISTS",
+  "STACK",
+  "QUEUE",
+  "TREES",
+  "GRAPHS",
+  "DYNAMIC_PROGRAMMING",
+  "SORTING",
+  "SEARCHING",
+  "RECURSION",
+  "GREEDY",
 ];
 
 interface TestCaseForm {
@@ -22,19 +34,19 @@ interface TestCaseForm {
 }
 
 export default function AdminCodingProblemsPage() {
-  useRoleGuard(['FACULTY', 'ADMIN', 'SUPER_ADMIN']);
+  useRoleGuard(["FACULTY", "ADMIN", "SUPER_ADMIN"]);
   const router = useRouter();
 
   const createMutation = useCreateProblem();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [difficulty, setDifficulty] = useState('EASY');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [difficulty, setDifficulty] = useState("EASY");
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [points, setPoints] = useState('10');
-  const [starterCode, setStarterCode] = useState('');
+  const [points, setPoints] = useState("10");
+  const [starterCode, setStarterCode] = useState("");
   const [testCases, setTestCases] = useState<TestCaseForm[]>([
-    { input: '', expectedOutput: '', isHidden: false },
+    { input: "", expectedOutput: "", isHidden: false },
   ]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -46,7 +58,10 @@ export default function AdminCodingProblemsPage() {
   };
 
   const addTestCase = () =>
-    setTestCases((prev) => [...prev, { input: '', expectedOutput: '', isHidden: false }]);
+    setTestCases((prev) => [
+      ...prev,
+      { input: "", expectedOutput: "", isHidden: false },
+    ]);
 
   const updateTestCase = (index: number, patch: Partial<TestCaseForm>) => {
     setTestCases((prev) => {
@@ -73,35 +88,38 @@ export default function AdminCodingProblemsPage() {
         points: parseInt(points, 10),
       });
       setSuccess(true);
-      setTitle('');
-      setDescription('');
+      toast.success("Coding problem created successfully");
+      setTitle("");
+      setDescription("");
       setSelectedTopics([]);
-      setTestCases([{ input: '', expectedOutput: '', isHidden: false }]);
-      setStarterCode('');
+      setTestCases([{ input: "", expectedOutput: "", isHidden: false }]);
+      setStarterCode("");
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.data?.message) {
-        setError(
-          Array.isArray(err.response.data.message)
-            ? err.response.data.message.join(', ')
-            : err.response.data.message,
-        );
-      } else {
-        setError('Something went wrong.');
-      }
+      const msg = getErrorMessage(err, "Failed to create problem.");
+      setError(msg);
+      toast.error(msg);
     }
   };
 
   const isValid =
-    title && description && selectedTopics.length > 0 && testCases.every((tc) => tc.input && tc.expectedOutput);
+    title &&
+    description &&
+    selectedTopics.length > 0 &&
+    testCases.every((tc) => tc.input && tc.expectedOutput);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Create Coding Problem</h1>
-          <p className="text-muted-foreground">Add a new DSA practice problem</p>
+          <p className="text-muted-foreground">
+            Add a new DSA practice problem
+          </p>
         </div>
-        <Button variant="outline" onClick={() => router.push('/dashboard/coding')}>
+        <Button
+          variant="outline"
+          onClick={() => router.push("/dashboard/coding")}
+        >
           View Problems
         </Button>
       </div>
@@ -110,7 +128,11 @@ export default function AdminCodingProblemsPage() {
         <CardContent className="space-y-4 pt-6">
           <div className="space-y-2">
             <Label>Title</Label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Two Sum" />
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Two Sum"
+            />
           </div>
 
           <div className="space-y-2">
@@ -138,7 +160,11 @@ export default function AdminCodingProblemsPage() {
             </div>
             <div className="space-y-2">
               <Label>Points</Label>
-              <Input type="number" value={points} onChange={(e) => setPoints(e.target.value)} />
+              <Input
+                type="number"
+                value={points}
+                onChange={(e) => setPoints(e.target.value)}
+              />
             </div>
           </div>
 
@@ -152,8 +178,8 @@ export default function AdminCodingProblemsPage() {
                   onClick={() => toggleTopic(topic)}
                   className={`rounded-full px-3 py-1 text-xs ${
                     selectedTopics.includes(topic)
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-muted-foreground'
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {topic}
@@ -193,7 +219,9 @@ export default function AdminCodingProblemsPage() {
                 <Input
                   placeholder="Expected Output"
                   value={tc.expectedOutput}
-                  onChange={(e) => updateTestCase(i, { expectedOutput: e.target.value })}
+                  onChange={(e) =>
+                    updateTestCase(i, { expectedOutput: e.target.value })
+                  }
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -201,12 +229,18 @@ export default function AdminCodingProblemsPage() {
                   <input
                     type="checkbox"
                     checked={tc.isHidden}
-                    onChange={(e) => updateTestCase(i, { isHidden: e.target.checked })}
+                    onChange={(e) =>
+                      updateTestCase(i, { isHidden: e.target.checked })
+                    }
                   />
                   Hidden test case (not shown to students)
                 </label>
                 {testCases.length > 1 && (
-                  <Button size="sm" variant="ghost" onClick={() => removeTestCase(i)}>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => removeTestCase(i)}
+                  >
                     Remove
                   </Button>
                 )}
@@ -217,10 +251,16 @@ export default function AdminCodingProblemsPage() {
       </Card>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
-      {success && <p className="text-sm text-green-600">Problem created successfully!</p>}
+      {success && (
+        <p className="text-sm text-green-600">Problem created successfully!</p>
+      )}
 
-      <Button onClick={handleCreate} disabled={!isValid || createMutation.isPending} className="w-full">
-        {createMutation.isPending ? 'Creating...' : 'Create Problem'}
+      <Button
+        onClick={handleCreate}
+        disabled={!isValid || createMutation.isPending}
+        className="w-full"
+      >
+        {createMutation.isPending ? "Creating..." : "Create Problem"}
       </Button>
     </div>
   );

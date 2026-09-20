@@ -15,6 +15,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { QRCodeSVG } from "qrcode.react";
 import { generateQrToken } from "@/lib/api/qr-attendance";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/get-error-message";
 
 interface Subject {
   _id: string;
@@ -68,8 +70,8 @@ export default function FacultyAttendancePage() {
         defaults[s._id] = "PRESENT";
       });
       setStatuses(defaults);
-    } catch {
-      setError("Failed to create attendance session.");
+    } catch (err) {
+      setError(getErrorMessage(err, "Failed to create attendance session."));
     }
   };
 
@@ -91,9 +93,13 @@ export default function FacultyAttendancePage() {
       }));
       await markMutation.mutateAsync({ sessionId, records });
       setSuccess(true);
-    } catch {
+      toast.success("Attendance submitted successfully");
+    } catch (err) {
       setError(
-        "Failed to submit attendance. The session may already be finalized.",
+        getErrorMessage(
+          err,
+          "Failed to submit attendance. The session may already be finalized.",
+        ),
       );
     }
   };

@@ -1,24 +1,30 @@
-'use client';
+"use client";
 
-import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useSubmissionsForAssignment, useGradeSubmission } from '@/hooks/queries/use-faculty-assignments';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  useSubmissionsForAssignment,
+  useGradeSubmission,
+} from "@/hooks/queries/use-faculty-assignments";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/get-error-message";
 
 export default function GradeSubmissionsPage() {
   const params = useParams();
   const router = useRouter();
   const assignmentId = params.id as string;
 
-  const { data: submissions, isLoading } = useSubmissionsForAssignment(assignmentId);
+  const { data: submissions, isLoading } =
+    useSubmissionsForAssignment(assignmentId);
   const gradeMutation = useGradeSubmission();
 
   const [gradingId, setGradingId] = useState<string | null>(null);
-  const [marks, setMarks] = useState('');
-  const [feedback, setFeedback] = useState('');
+  const [marks, setMarks] = useState("");
+  const [feedback, setFeedback] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const handleGrade = async (submissionId: string) => {
@@ -30,22 +36,33 @@ export default function GradeSubmissionsPage() {
         feedback: feedback || undefined,
       });
       setGradingId(null);
-      setMarks('');
-      setFeedback('');
-    } catch {
-      setError('Failed to grade submission — check marks don\'t exceed the maximum.');
+      toast.success("Submission graded successfully");
+      setMarks("");
+      setFeedback("");
+    } catch (err) {
+      setError(
+        getErrorMessage(
+          err,
+          "Failed to grade submission — check marks don't exceed the maximum.",
+        ),
+      );
     }
   };
 
   return (
     <div className="space-y-6">
-      <Button variant="ghost" onClick={() => router.push('/dashboard/faculty/assignments')}>
+      <Button
+        variant="ghost"
+        onClick={() => router.push("/dashboard/faculty/assignments")}
+      >
         ← Back
       </Button>
 
       <div>
         <h1 className="text-2xl font-bold">Submissions</h1>
-        <p className="text-muted-foreground">Review and grade student submissions</p>
+        <p className="text-muted-foreground">
+          Review and grade student submissions
+        </p>
       </div>
 
       {isLoading ? (
@@ -59,11 +76,14 @@ export default function GradeSubmissionsPage() {
                   <span>{sub.studentId?.rollNumber}</span>
                   <span
                     className={`text-sm font-normal ${
-                      sub.status === 'GRADED' ? 'text-green-600' : 'text-muted-foreground'
+                      sub.status === "GRADED"
+                        ? "text-green-600"
+                        : "text-muted-foreground"
                     }`}
                   >
                     {sub.status}
-                    {sub.marksObtained !== undefined && ` — ${sub.marksObtained} marks`}
+                    {sub.marksObtained !== undefined &&
+                      ` — ${sub.marksObtained} marks`}
                   </span>
                 </CardTitle>
               </CardHeader>
@@ -78,7 +98,9 @@ export default function GradeSubmissionsPage() {
                 </a>
 
                 {sub.feedback && (
-                  <p className="text-sm text-muted-foreground">Feedback: {sub.feedback}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Feedback: {sub.feedback}
+                  </p>
                 )}
 
                 {gradingId === sub._id ? (
@@ -94,23 +116,33 @@ export default function GradeSubmissionsPage() {
                       value={feedback}
                       onChange={(e) => setFeedback(e.target.value)}
                     />
-                    {error && <p className="text-sm text-destructive">{error}</p>}
+                    {error && (
+                      <p className="text-sm text-destructive">{error}</p>
+                    )}
                     <div className="flex gap-2">
                       <Button
                         size="sm"
                         onClick={() => handleGrade(sub._id)}
                         disabled={!marks || gradeMutation.isPending}
                       >
-                        {gradeMutation.isPending ? 'Saving...' : 'Save Grade'}
+                        {gradeMutation.isPending ? "Saving..." : "Save Grade"}
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => setGradingId(null)}>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setGradingId(null)}
+                      >
                         Cancel
                       </Button>
                     </div>
                   </div>
                 ) : (
-                  <Button size="sm" variant="outline" onClick={() => setGradingId(sub._id)}>
-                    {sub.status === 'GRADED' ? 'Update Grade' : 'Grade'}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setGradingId(sub._id)}
+                  >
+                    {sub.status === "GRADED" ? "Update Grade" : "Grade"}
                   </Button>
                 )}
               </CardContent>

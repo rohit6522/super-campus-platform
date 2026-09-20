@@ -1,19 +1,29 @@
-'use client';
+"use client";
 
-import { useParams, useRouter } from 'next/navigation';
-import { useDriveApplications, useUpdateApplicationStatus } from '@/hooks/queries/use-officer-placements';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-
-const statusOptions = ['APPLIED', 'SHORTLISTED', 'INTERVIEW_SCHEDULED', 'SELECTED', 'REJECTED'];
+import { useParams, useRouter } from "next/navigation";
+import {
+  useDriveApplications,
+  useUpdateApplicationStatus,
+} from "@/hooks/queries/use-officer-placements";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/get-error-message";
+const statusOptions = [
+  "APPLIED",
+  "SHORTLISTED",
+  "INTERVIEW_SCHEDULED",
+  "SELECTED",
+  "REJECTED",
+];
 
 const statusColors: Record<string, string> = {
-  APPLIED: 'bg-blue-50 text-blue-700',
-  SHORTLISTED: 'bg-yellow-50 text-yellow-700',
-  INTERVIEW_SCHEDULED: 'bg-purple-50 text-purple-700',
-  SELECTED: 'bg-green-50 text-green-700',
-  REJECTED: 'bg-red-50 text-red-700',
+  APPLIED: "bg-blue-50 text-blue-700",
+  SHORTLISTED: "bg-yellow-50 text-yellow-700",
+  INTERVIEW_SCHEDULED: "bg-purple-50 text-purple-700",
+  SELECTED: "bg-green-50 text-green-700",
+  REJECTED: "bg-red-50 text-red-700",
 };
 
 export default function DriveApplicationsPage() {
@@ -26,13 +36,18 @@ export default function DriveApplicationsPage() {
 
   return (
     <div className="space-y-6">
-      <Button variant="ghost" onClick={() => router.push('/dashboard/placement/drives')}>
+      <Button
+        variant="ghost"
+        onClick={() => router.push("/dashboard/placement/drives")}
+      >
         ← Back
       </Button>
 
       <div>
         <h1 className="text-2xl font-bold">Applications</h1>
-        <p className="text-muted-foreground">Manage candidates for this drive</p>
+        <p className="text-muted-foreground">
+          Manage candidates for this drive
+        </p>
       </div>
 
       {isLoading ? (
@@ -45,22 +60,32 @@ export default function DriveApplicationsPage() {
                 <div>
                   <p className="font-medium">{app.studentId?.rollNumber}</p>
                   <p className="text-sm text-muted-foreground">
-                    CGPA {app.studentId?.currentCGPA} · Applied{' '}
+                    CGPA {app.studentId?.currentCGPA} · Applied{" "}
                     {new Date(app.createdAt).toLocaleDateString()}
                   </p>
                 </div>
                 <select
                   className={`rounded-full px-3 py-1 text-xs font-medium border-none ${
-                    statusColors[app.status] ?? 'bg-muted text-muted-foreground'
+                    statusColors[app.status] ?? "bg-muted text-muted-foreground"
                   }`}
                   value={app.status}
-                  onChange={(e) =>
-                    updateStatusMutation.mutate({ applicationId: app._id, status: e.target.value })
-                  }
+                  onChange={async (e) => {
+                    try {
+                      await updateStatusMutation.mutateAsync({
+                        applicationId: app._id,
+                        status: e.target.value,
+                      });
+                      toast.success("Status updated");
+                    } catch (err) {
+                      toast.error(
+                        getErrorMessage(err, "Failed to update status."),
+                      );
+                    }
+                  }}
                 >
                   {statusOptions.map((s) => (
                     <option key={s} value={s}>
-                      {s.replace('_', ' ')}
+                      {s.replace("_", " ")}
                     </option>
                   ))}
                 </select>

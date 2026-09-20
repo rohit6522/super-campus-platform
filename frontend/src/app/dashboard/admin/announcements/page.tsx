@@ -1,33 +1,43 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRoleGuard } from '@/hooks/use-role-guard';
-import { useAnnouncements, useCreateAnnouncement } from '@/hooks/queries/use-announcements';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from "react";
+import { useRoleGuard } from "@/hooks/use-role-guard";
+import {
+  useAnnouncements,
+  useCreateAnnouncement,
+} from "@/hooks/queries/use-announcements";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/get-error-message";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Megaphone } from "lucide-react";
 
 export default function AdminAnnouncementsPage() {
-  useRoleGuard(['ADMIN', 'SUPER_ADMIN', 'HOD']);
+  useRoleGuard(["ADMIN", "SUPER_ADMIN", "HOD"]);
 
   const { data: announcements, isLoading } = useAnnouncements(20);
   const createMutation = useCreateAnnouncement();
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [category, setCategory] = useState('GENERAL');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState("GENERAL");
   const [error, setError] = useState<string | null>(null);
 
   const handleCreate = async () => {
     setError(null);
     try {
       await createMutation.mutateAsync({ title, content, category });
-      setTitle('');
-      setContent('');
-    } catch {
-      setError('Failed to post announcement.');
+      setTitle("");
+      setContent("");
+      toast.success("Announcement posted");
+    } catch (err) {
+      const msg = getErrorMessage(err, "Failed to post announcement.");
+      setError(msg);
+      toast.error(msg);
     }
   };
 
@@ -70,8 +80,11 @@ export default function AdminAnnouncementsPage() {
             </select>
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
-          <Button onClick={handleCreate} disabled={!title || !content || createMutation.isPending}>
-            {createMutation.isPending ? 'Posting...' : 'Post Announcement'}
+          <Button
+            onClick={handleCreate}
+            disabled={!title || !content || createMutation.isPending}
+          >
+            {createMutation.isPending ? "Posting..." : "Post Announcement"}
           </Button>
         </CardContent>
       </Card>
@@ -93,7 +106,11 @@ export default function AdminAnnouncementsPage() {
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">No announcements yet.</p>
+            <EmptyState
+              icon={Megaphone}
+              title="No announcements yet"
+              description="Post your first announcement above."
+            />
           )}
         </CardContent>
       </Card>

@@ -1,15 +1,22 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRoleGuard } from '@/hooks/use-role-guard';
-import { useMySubjectsForAttendance, useStudentsByClass } from '@/hooks/queries/use-faculty-attendance';
-import { useCreateExam, useEnterResults } from '@/hooks/queries/use-faculty-exams';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
-
+import { useState } from "react";
+import { useRoleGuard } from "@/hooks/use-role-guard";
+import {
+  useMySubjectsForAttendance,
+  useStudentsByClass,
+} from "@/hooks/queries/use-faculty-attendance";
+import {
+  useCreateExam,
+  useEnterResults,
+} from "@/hooks/queries/use-faculty-exams";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/get-error-message";
 interface Subject {
   _id: string;
   name: string;
@@ -19,25 +26,28 @@ interface Subject {
 }
 
 export default function FacultyExamsPage() {
-  useRoleGuard(['FACULTY']);
+  useRoleGuard(["FACULTY"]);
 
-  const { data: subjects, isLoading: subjectsLoading } = useMySubjectsForAttendance();
+  const { data: subjects, isLoading: subjectsLoading } =
+    useMySubjectsForAttendance();
   const createExamMutation = useCreateExam();
   const enterResultsMutation = useEnterResults();
 
-  const [subjectId, setSubjectId] = useState('');
-  const [examType, setExamType] = useState('FINAL');
-  const [date, setDate] = useState('');
-  const [startTime, setStartTime] = useState('09:00');
-  const [endTime, setEndTime] = useState('12:00');
-  const [room, setRoom] = useState('');
-  const [maxMarks, setMaxMarks] = useState('100');
+  const [subjectId, setSubjectId] = useState("");
+  const [examType, setExamType] = useState("FINAL");
+  const [date, setDate] = useState("");
+  const [startTime, setStartTime] = useState("09:00");
+  const [endTime, setEndTime] = useState("12:00");
+  const [room, setRoom] = useState("");
+  const [maxMarks, setMaxMarks] = useState("100");
   const [examId, setExamId] = useState<string | null>(null);
   const [marksInput, setMarksInput] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const selectedSubject: Subject | undefined = subjects?.find((s: Subject) => s._id === subjectId);
+  const selectedSubject: Subject | undefined = subjects?.find(
+    (s: Subject) => s._id === subjectId,
+  );
 
   const { data: students, isLoading: studentsLoading } = useStudentsByClass(
     selectedSubject?.departmentId?._id,
@@ -60,8 +70,13 @@ export default function FacultyExamsPage() {
         maxMarks: parseInt(maxMarks, 10),
       });
       setExamId(exam._id);
-    } catch {
-      setError('Failed to create exam. Check the room/time isn\'t already booked.');
+    } catch (err) {
+      setError(
+        getErrorMessage(
+          err,
+          "Failed to create exam. Check the room/time isn't already booked.",
+        ),
+      );
     }
   };
 
@@ -72,17 +87,26 @@ export default function FacultyExamsPage() {
     try {
       const results = students
         .filter((s: any) => marksInput[s._id])
-        .map((s: any) => ({ studentId: s._id, marksObtained: parseInt(marksInput[s._id], 10) }));
+        .map((s: any) => ({
+          studentId: s._id,
+          marksObtained: parseInt(marksInput[s._id], 10),
+        }));
 
       if (results.length === 0) {
-        setError('Enter marks for at least one student.');
+        setError("Enter marks for at least one student.");
         return;
       }
 
       await enterResultsMutation.mutateAsync({ examId, results });
       setSuccess(true);
-    } catch {
-      setError('Failed to submit results — marks may exceed the maximum allowed.');
+      toast.success("Results submitted successfully");
+    } catch (err) {
+      setError(
+        getErrorMessage(
+          err,
+          "Failed to submit results — marks may exceed the maximum allowed.",
+        ),
+      );
     }
   };
 
@@ -90,7 +114,9 @@ export default function FacultyExamsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Exams & Results</h1>
-        <p className="text-muted-foreground">Schedule an exam and enter marks</p>
+        <p className="text-muted-foreground">
+          Schedule an exam and enter marks
+        </p>
       </div>
 
       <Card>
@@ -136,39 +162,69 @@ export default function FacultyExamsPage() {
             </div>
             <div className="space-y-2">
               <Label>Date</Label>
-              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} disabled={!!examId} />
+              <Input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                disabled={!!examId}
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div className="space-y-2">
               <Label>Start Time</Label>
-              <Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} disabled={!!examId} />
+              <Input
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                disabled={!!examId}
+              />
             </div>
             <div className="space-y-2">
               <Label>End Time</Label>
-              <Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} disabled={!!examId} />
+              <Input
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                disabled={!!examId}
+              />
             </div>
             <div className="space-y-2">
               <Label>Max Marks</Label>
-              <Input type="number" value={maxMarks} onChange={(e) => setMaxMarks(e.target.value)} disabled={!!examId} />
+              <Input
+                type="number"
+                value={maxMarks}
+                onChange={(e) => setMaxMarks(e.target.value)}
+                disabled={!!examId}
+              />
             </div>
           </div>
 
           <div className="space-y-2">
             <Label>Room</Label>
-            <Input value={room} onChange={(e) => setRoom(e.target.value)} disabled={!!examId} />
+            <Input
+              value={room}
+              onChange={(e) => setRoom(e.target.value)}
+              disabled={!!examId}
+            />
           </div>
 
           {!examId && (
             <Button
               onClick={handleCreateExam}
-              disabled={!subjectId || !date || !room || createExamMutation.isPending}
+              disabled={
+                !subjectId || !date || !room || createExamMutation.isPending
+              }
             >
-              {createExamMutation.isPending ? 'Creating...' : 'Create Exam'}
+              {createExamMutation.isPending ? "Creating..." : "Create Exam"}
             </Button>
           )}
-          {examId && <p className="text-sm text-green-600">Exam created — enter marks below.</p>}
+          {examId && (
+            <p className="text-sm text-green-600">
+              Exam created — enter marks below.
+            </p>
+          )}
         </CardContent>
       </Card>
 
@@ -183,33 +239,53 @@ export default function FacultyExamsPage() {
             ) : students && students.length > 0 ? (
               <div className="space-y-2">
                 {students.map((student: any) => (
-                  <div key={student._id} className="flex items-center justify-between gap-3">
+                  <div
+                    key={student._id}
+                    className="flex items-center justify-between gap-3"
+                  >
                     <div>
                       <p className="font-medium">{student.rollNumber}</p>
-                      <p className="text-sm text-muted-foreground">{student.userId?.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {student.userId?.name}
+                      </p>
                     </div>
                     <Input
                       type="number"
                       placeholder={`/ ${maxMarks}`}
                       className="w-24"
-                      value={marksInput[student._id] ?? ''}
+                      value={marksInput[student._id] ?? ""}
                       onChange={(e) =>
-                        setMarksInput((prev) => ({ ...prev, [student._id]: e.target.value }))
+                        setMarksInput((prev) => ({
+                          ...prev,
+                          [student._id]: e.target.value,
+                        }))
                       }
                     />
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground">No students found for this class.</p>
+              <p className="text-muted-foreground">
+                No students found for this class.
+              </p>
             )}
 
             {error && <p className="text-sm text-destructive">{error}</p>}
-            {success && <p className="text-sm text-green-600">Results submitted successfully!</p>}
+            {success && (
+              <p className="text-sm text-green-600">
+                Results submitted successfully!
+              </p>
+            )}
 
             {!success && (
-              <Button onClick={handleEnterResults} disabled={enterResultsMutation.isPending} className="w-full">
-                {enterResultsMutation.isPending ? 'Submitting...' : 'Submit Results'}
+              <Button
+                onClick={handleEnterResults}
+                disabled={enterResultsMutation.isPending}
+                className="w-full"
+              >
+                {enterResultsMutation.isPending
+                  ? "Submitting..."
+                  : "Submit Results"}
               </Button>
             )}
           </CardContent>
