@@ -20,7 +20,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { useAnnouncements } from "@/hooks/queries/use-announcements";
-
+import { announcementColors } from "@/lib/announcement-colors";
 export default function DashboardPage() {
   useRoleGuard(["STUDENT"]);
   const user = useAuthStore((state) => state.user);
@@ -281,9 +281,10 @@ export default function DashboardPage() {
                 <div key={a._id} className="rounded-lg border p-3 text-sm">
                   <div className="flex items-center justify-between">
                     <p className="font-medium">{a.title}</p>
-                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs">
+                                       <span className={`rounded-full px-2 py-0.5 text-xs ${announcementColors[a.category] ?? 'bg-muted'}`}>
                       {a.category}
                     </span>
+
                   </div>
                   <p className="mt-1 text-muted-foreground line-clamp-2">
                     {a.content}
