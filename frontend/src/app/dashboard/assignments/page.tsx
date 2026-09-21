@@ -1,15 +1,19 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useStudentProfile } from '@/hooks/queries/use-student-dashboard';
-import { useAssignmentsForSubject, useMySubmissions, useSubmitAssignment } from '@/hooks/queries/use-student-assignments';
-import { apiClient } from '@/lib/api-client';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen } from 'lucide-react';
+import { useState } from "react";
+import { useStudentProfile } from "@/hooks/queries/use-student-dashboard";
+import {
+  useAssignmentsForSubject,
+  useMySubmissions,
+  useSubmitAssignment,
+} from "@/hooks/queries/use-student-assignments";
+import { apiClient } from "@/lib/api-client";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { BookOpen } from "lucide-react";
 
 interface Subject {
   _id: string;
@@ -21,10 +25,17 @@ export default function AssignmentsPage() {
   const { data: profile } = useStudentProfile();
 
   const { data: subjects, isLoading: subjectsLoading } = useQuery({
-    queryKey: ['subjects-for-student', profile?.departmentId?._id, profile?.semester],
+    queryKey: [
+      "subjects-for-student",
+      profile?.departmentId?._id,
+      profile?.semester,
+    ],
     queryFn: async () => {
-      const response = await apiClient.get<Subject[]>('/subjects', {
-        params: { departmentId: profile?.departmentId?._id, semester: profile?.semester },
+      const response = await apiClient.get<Subject[]>("/subjects", {
+        params: {
+          departmentId: profile?.departmentId?._id,
+          semester: profile?.semester,
+        },
       });
       return response.data;
     },
@@ -34,15 +45,16 @@ export default function AssignmentsPage() {
   const { data: mySubmissions } = useMySubmissions();
   const submitMutation = useSubmitAssignment();
 
-  const [expandedSubjectId, setExpandedSubjectId] = useState<string | null>(null);
+  const [expandedSubjectId, setExpandedSubjectId] = useState<string | null>(
+    null,
+  );
   const [submittingId, setSubmittingId] = useState<string | null>(null);
-  const [fileUrl, setFileUrl] = useState('');
-  const [fileName, setFileName] = useState('');
+  const [fileUrl, setFileUrl] = useState("");
+  const [fileName, setFileName] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const { data: assignments, isLoading: assignmentsLoading } = useAssignmentsForSubject(
-    expandedSubjectId ?? '',
-  );
+  const { data: assignments, isLoading: assignmentsLoading } =
+    useAssignmentsForSubject(expandedSubjectId ?? "");
 
   const getSubmissionFor = (assignmentId: string) =>
     mySubmissions?.find((s) => s.assignmentId?._id === assignmentId);
@@ -52,10 +64,10 @@ export default function AssignmentsPage() {
     try {
       await submitMutation.mutateAsync({ assignmentId, fileUrl, fileName });
       setSubmittingId(null);
-      setFileUrl('');
-      setFileName('');
+      setFileUrl("");
+      setFileName("");
     } catch {
-      setError('Failed to submit. Please try again.');
+      setError("Failed to submit. Please try again.");
     }
   };
 
@@ -63,7 +75,9 @@ export default function AssignmentsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Courses & Assignments</h1>
-        <p className="text-muted-foreground">View subjects and submit assignments</p>
+        <p className="text-muted-foreground">
+          View subjects and submit assignments
+        </p>
       </div>
 
       {subjectsLoading ? (
@@ -75,7 +89,9 @@ export default function AssignmentsPage() {
               <CardContent className="pt-6">
                 <button
                   onClick={() =>
-                    setExpandedSubjectId(expandedSubjectId === subject._id ? null : subject._id)
+                    setExpandedSubjectId(
+                      expandedSubjectId === subject._id ? null : subject._id,
+                    )
                   }
                   className="flex w-full items-center justify-between text-left"
                 >
@@ -86,7 +102,9 @@ export default function AssignmentsPage() {
                     </span>
                   </div>
                   <span className="text-sm text-muted-foreground">
-                    {expandedSubjectId === subject._id ? 'Hide' : 'View Assignments'}
+                    {expandedSubjectId === subject._id
+                      ? "Hide"
+                      : "View Assignments"}
                   </span>
                 </button>
 
@@ -98,27 +116,42 @@ export default function AssignmentsPage() {
                       assignments.map((assignment) => {
                         const submission = getSubmissionFor(assignment._id);
                         return (
-                          <div key={assignment._id} className="rounded-md border p-3 text-sm">
+                          <div
+                            key={assignment._id}
+                            className="rounded-md border p-3 text-sm"
+                          >
                             <div className="flex items-center justify-between">
                               <p className="font-medium">{assignment.title}</p>
                               <span className="text-xs text-muted-foreground">
-                                Due {new Date(assignment.deadline).toLocaleDateString()} ·{' '}
-                                {assignment.maxMarks} marks
+                                Due{" "}
+                                {new Date(
+                                  assignment.deadline,
+                                ).toLocaleDateString()}{" "}
+                                · {assignment.maxMarks} marks
+                                {new Date(assignment.deadline) < new Date() &&
+                                  !getSubmissionFor(assignment._id) && (
+                                    <span className="ml-2 rounded-full bg-red-50 px-2 py-0.5 text-red-600">
+                                      Overdue
+                                    </span>
+                                  )}
                               </span>
                             </div>
+
                             {assignment.description && (
-                              <p className="mt-1 text-muted-foreground">{assignment.description}</p>
+                              <p className="mt-1 text-muted-foreground">
+                                {assignment.description}
+                              </p>
                             )}
 
                             {submission ? (
                               <div className="mt-2 rounded-md bg-muted p-2">
                                 <p>
-                                  Status:{' '}
+                                  Status:{" "}
                                   <span
                                     className={
-                                      submission.status === 'GRADED'
-                                        ? 'text-green-600 font-medium'
-                                        : 'text-muted-foreground'
+                                      submission.status === "GRADED"
+                                        ? "text-green-600 font-medium"
+                                        : "text-muted-foreground"
                                     }
                                   >
                                     {submission.status}
@@ -144,16 +177,28 @@ export default function AssignmentsPage() {
                                   value={fileName}
                                   onChange={(e) => setFileName(e.target.value)}
                                 />
-                                {error && <p className="text-destructive">{error}</p>}
+                                {error && (
+                                  <p className="text-destructive">{error}</p>
+                                )}
                                 <div className="flex gap-2">
                                   <Button
                                     size="sm"
                                     onClick={() => handleSubmit(assignment._id)}
-                                    disabled={!fileUrl || !fileName || submitMutation.isPending}
+                                    disabled={
+                                      !fileUrl ||
+                                      !fileName ||
+                                      submitMutation.isPending
+                                    }
                                   >
-                                    {submitMutation.isPending ? 'Submitting...' : 'Submit'}
+                                    {submitMutation.isPending
+                                      ? "Submitting..."
+                                      : "Submit"}
                                   </Button>
-                                  <Button size="sm" variant="ghost" onClick={() => setSubmittingId(null)}>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => setSubmittingId(null)}
+                                  >
                                     Cancel
                                   </Button>
                                 </div>
@@ -172,7 +217,9 @@ export default function AssignmentsPage() {
                         );
                       })
                     ) : (
-                      <p className="text-muted-foreground">No assignments for this subject yet.</p>
+                      <p className="text-muted-foreground">
+                        No assignments for this subject yet.
+                      </p>
                     )}
                   </div>
                 )}
@@ -181,7 +228,9 @@ export default function AssignmentsPage() {
           ))}
         </div>
       ) : (
-        <p className="text-muted-foreground">No subjects found for your semester.</p>
+        <p className="text-muted-foreground">
+          No subjects found for your semester.
+        </p>
       )}
     </div>
   );
