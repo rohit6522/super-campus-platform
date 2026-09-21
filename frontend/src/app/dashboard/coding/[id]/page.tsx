@@ -10,6 +10,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from 'sonner';
 
 const verdictColors: Record<string, string> = {
   ACCEPTED: "text-green-600",
@@ -48,18 +49,15 @@ export default function ProblemDetailPage() {
     setCode(problem.starterCode);
   }
 
-  const handleSubmit = async () => {
+    const handleSubmit = async () => {
     setLastResult(null);
-    const result = await submitMutation.mutateAsync({
-      problemId,
-      code,
-      language,
-    });
-    setLastResult({
-      verdict: result.verdict,
-      passed: result.testCasesPassed,
-      total: result.totalTestCases,
-    });
+    try {
+      const result = await submitMutation.mutateAsync({ problemId, code, language });
+      setLastResult({ verdict: result.verdict, passed: result.testCasesPassed, total: result.totalTestCases });
+      toast[result.verdict === 'ACCEPTED' ? 'success' : 'error'](result.verdict.replace('_', ' '));
+    } catch {
+      toast.error('Submission failed');
+    }
   };
 
   if (isLoading || !problem) {
