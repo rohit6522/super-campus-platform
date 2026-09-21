@@ -3,7 +3,19 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Search, Bell, Bot, QrCode, LogOut, User, ChevronDown, BookOpen, Briefcase, Code2, Megaphone } from 'lucide-react';
+import {
+  Search,
+  Bell,
+  Bot,
+  QrCode,
+  LogOut,
+  User,
+  ChevronDown,
+  BookOpen,
+  Briefcase,
+  Code2,
+  Megaphone,
+} from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth-store";
 import { search as searchApi } from "@/lib/api/search";
@@ -17,41 +29,61 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
 function getReadIds(): string[] {
-  if (typeof window === 'undefined') return [];
+  if (typeof window === "undefined") return [];
   try {
-    return JSON.parse(localStorage.getItem('read-announcements') ?? '[]');
+    return JSON.parse(localStorage.getItem("read-announcements") ?? "[]");
   } catch {
     return [];
   }
 }
 
 function setReadIds(ids: string[]) {
-  localStorage.setItem('read-announcements', JSON.stringify(ids));
+  localStorage.setItem("read-announcements", JSON.stringify(ids));
 }
 
-
-
-const roleQuickActions: Record<string, { label: string; icon: any; href: string }[]> = {
+const roleQuickActions: Record<
+  string,
+  { label: string; icon: any; href: string }[]
+> = {
   STUDENT: [
-    { label: 'Ask Campus AI', icon: Bot, href: '/dashboard/ai-assistant' },
-    { label: 'QR Check-in', icon: QrCode, href: '/dashboard/qr-attendance' },
+    { label: "Ask Campus AI", icon: Bot, href: "/dashboard/ai-assistant" },
+    { label: "QR Check-in", icon: QrCode, href: "/dashboard/qr-attendance" },
   ],
   FACULTY: [
-    { label: 'Take Attendance', icon: QrCode, href: '/dashboard/faculty/attendance' },
+    {
+      label: "Take Attendance",
+      icon: QrCode,
+      href: "/dashboard/faculty/attendance",
+    },
   ],
   HOD: [
-    { label: 'Take Attendance', icon: QrCode, href: '/dashboard/faculty/attendance' },
+    {
+      label: "Take Attendance",
+      icon: QrCode,
+      href: "/dashboard/faculty/attendance",
+    },
   ],
   ADMIN: [
-    { label: 'Post Announcement', icon: Megaphone, href: '/dashboard/admin/announcements' },
+    {
+      label: "Post Announcement",
+      icon: Megaphone,
+      href: "/dashboard/admin/announcements",
+    },
   ],
   SUPER_ADMIN: [
-    { label: 'Post Announcement', icon: Megaphone, href: '/dashboard/admin/announcements' },
+    {
+      label: "Post Announcement",
+      icon: Megaphone,
+      href: "/dashboard/admin/announcements",
+    },
   ],
   PLACEMENT_OFFICER: [
-    { label: 'Create Drive', icon: Briefcase, href: '/dashboard/placement/drives' },
+    {
+      label: "Create Drive",
+      icon: Briefcase,
+      href: "/dashboard/placement/drives",
+    },
   ],
 };
 
@@ -78,21 +110,20 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
     enabled: searchQuery.trim().length >= 2,
   });
 
-    const [readIds, setReadIdsState] = useState<string[]>([]);
+  const [readIds, setReadIdsState] = useState<string[]>([]);
   const { data: announcements } = useAnnouncements(5);
   useEffect(() => {
     setReadIdsState(getReadIds());
   }, []);
 
-  const unreadCount = announcements?.filter((a) => !readIds.includes(a._id)).length ?? 0;
+  const unreadCount =
+    announcements?.filter((a) => !readIds.includes(a._id)).length ?? 0;
 
   const handleMarkAllRead = () => {
     const allIds = announcements?.map((a) => a._id) ?? [];
     setReadIds(allIds);
     setReadIdsState(allIds);
   };
-
-
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -125,7 +156,10 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
         sidebarCollapsed ? "ml-16" : "ml-64"
       }`}
     >
-           <div ref={searchContainerRef} className="relative hidden w-full max-w-md sm:block">
+      <div
+        ref={searchContainerRef}
+        className="relative hidden w-full max-w-md sm:block"
+      >
         <Search
           size={16}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
@@ -139,10 +173,10 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
             setShowResults(true);
           }}
           onFocus={() => setShowResults(true)}
-                    onKeyDown={(e) => {
-            if (e.key === 'Escape') {
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
               setShowResults(false);
-              setSearchQuery('');
+              setSearchQuery("");
             }
           }}
         />
@@ -182,7 +216,7 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
       </div>
 
       <div className="flex items-center gap-3">
-               {(roleQuickActions[user?.role ?? ''] ?? []).map((action) => {
+        {(roleQuickActions[user?.role ?? ""] ?? []).map((action) => {
           const Icon = action.icon;
           return (
             <Button
@@ -197,13 +231,13 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
           );
         })}
 
-                <DropdownMenu>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="relative rounded-full p-2 hover:bg-muted">
               <Bell size={18} />
               {unreadCount > 0 && (
                 <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
-                  {unreadCount > 9 ? '9+' : unreadCount}
+                  {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               )}
             </button>
@@ -225,17 +259,26 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
               announcements.map((a) => {
                 const isUnread = !readIds.includes(a._id);
                 return (
-                  <DropdownMenuItem key={a._id} className="flex-col items-start gap-0.5 whitespace-normal">
+                  <DropdownMenuItem
+                    key={a._id}
+                    className="flex-col items-start gap-0.5 whitespace-normal"
+                  >
                     <div className="flex w-full items-center gap-1.5">
-                      {isUnread && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                      {isUnread && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      )}
                       <p className="text-sm font-medium">{a.title}</p>
                     </div>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{a.content}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      {a.content}
+                    </p>
                   </DropdownMenuItem>
                 );
               })
             ) : (
-              <p className="px-3 py-2 text-sm text-muted-foreground">No new notifications.</p>
+              <p className="px-3 py-2 text-sm text-muted-foreground">
+                No new notifications.
+              </p>
             )}
           </DropdownMenuContent>
         </DropdownMenu>
