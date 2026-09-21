@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { Sidebar } from '@/components/layout/sidebar';
 import { Topbar } from '@/components/layout/topbar';
-
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isChecking } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
@@ -19,11 +19,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, []);
 
   if (isChecking) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
