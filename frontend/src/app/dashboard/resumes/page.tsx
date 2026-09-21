@@ -1,11 +1,17 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useMyResumes, useCreateResume, useDeleteResume, useDuplicateResume } from '@/hooks/queries/use-resumes';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  useMyResumes,
+  useCreateResume,
+  useDeleteResume,
+  useDuplicateResume,
+} from "@/hooks/queries/use-resumes";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 export default function ResumesListPage() {
   const router = useRouter();
@@ -16,9 +22,9 @@ export default function ResumesListPage() {
 
   const handleCreate = async () => {
     const resume = await createMutation.mutateAsync({
-      title: 'Untitled Resume',
-      fullName: '',
-      email: '',
+      title: "Untitled Resume",
+      fullName: "",
+      email: "",
       education: [],
       skills: [],
       experience: [],
@@ -38,7 +44,7 @@ export default function ResumesListPage() {
           <p className="text-muted-foreground">Build and manage your resumes</p>
         </div>
         <Button onClick={handleCreate} disabled={createMutation.isPending}>
-          {createMutation.isPending ? 'Creating...' : '+ New Resume'}
+          {createMutation.isPending ? "Creating..." : "+ New Resume"}
         </Button>
       </div>
 
@@ -53,8 +59,8 @@ export default function ResumesListPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <p className="text-sm text-muted-foreground">
-                  {resume.fullName || 'No name set'} · {resume.skills.length} skills ·{' '}
-                  {resume.experience.length} experience entries
+                  {resume.fullName || "No name set"} · {resume.skills.length}{" "}
+                  skills · {resume.experience.length} experience entries
                 </p>
                 <div className="flex gap-2">
                   <Link href={`/dashboard/resumes/${resume._id}`}>
@@ -62,17 +68,26 @@ export default function ResumesListPage() {
                       Edit
                     </Button>
                   </Link>
+
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => duplicateMutation.mutate(resume._id)}
+                    onClick={async () => {
+                      try {
+                        await duplicateMutation.mutateAsync(resume._id);
+                        toast.success("Resume duplicated");
+                      } catch {
+                        toast.error("Failed to duplicate resume");
+                      }
+                    }}
                   >
                     Duplicate
                   </Button>
+
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => deleteMutation.mutate(resume._id)}
+                   onClick={async () => { try { await deleteMutation.mutateAsync(resume._id); toast.success('Resume deleted'); } catch { toast.error('Failed to delete resume'); } }}
                   >
                     Delete
                   </Button>
