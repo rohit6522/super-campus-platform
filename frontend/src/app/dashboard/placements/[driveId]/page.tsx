@@ -18,6 +18,7 @@ export default function DriveDetailPage() {
   const applyMutation = useApplyToDrive();
   const [applyError, setApplyError] = useState<string | null>(null);
   const [applied, setApplied] = useState(false);
+  
 
   const handleApply = async () => {
     setApplyError(null);
@@ -40,6 +41,7 @@ export default function DriveDetailPage() {
   if (!drive) {
     return <p className="text-muted-foreground">Drive not found.</p>;
   }
+    const isExpired = new Date(drive.applicationDeadline) < new Date();
 
   return (
     <div className="space-y-6">
@@ -145,16 +147,12 @@ export default function DriveDetailPage() {
                 </p>
               )}
 
-              <Button
+                           <Button
                 onClick={handleApply}
-                disabled={!eligibility.eligible || applyMutation.isPending || applied}
+                disabled={!eligibility.eligible || applyMutation.isPending || applied || isExpired}
                 className="w-full"
               >
-                {applied
-                  ? 'Applied'
-                  : applyMutation.isPending
-                  ? 'Applying...'
-                  : 'Apply Now'}
+                {isExpired ? 'Applications Closed' : applied ? 'Applied' : applyMutation.isPending ? 'Applying...' : 'Apply Now'}
               </Button>
             </>
           ) : null}

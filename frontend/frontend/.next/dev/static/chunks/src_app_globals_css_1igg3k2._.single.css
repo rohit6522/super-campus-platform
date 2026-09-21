@@ -485,10 +485,6 @@
     top: 0;
   }
 
-  .top-1 {
-    top: var(--spacing);
-  }
-
   .top-1\/2 {
     top: 50%;
   }
@@ -499,10 +495,6 @@
 
   .-right-0\.5 {
     right: calc(var(--spacing) * -.5);
-  }
-
-  .right-1 {
-    right: var(--spacing);
   }
 
   .right-3 {
@@ -805,10 +797,6 @@
 
   .w-1\.5 {
     width: calc(var(--spacing) * 1.5);
-  }
-
-  .w-2 {
-    width: calc(var(--spacing) * 2);
   }
 
   .w-4 {
