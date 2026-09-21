@@ -139,6 +139,12 @@ export function Topbar({ sidebarCollapsed }: { sidebarCollapsed: boolean }) {
             setShowResults(true);
           }}
           onFocus={() => setShowResults(true)}
+                    onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setShowResults(false);
+              setSearchQuery('');
+            }
+          }}
         />
 
         {showResults && searchQuery.trim().length >= 2 && (
