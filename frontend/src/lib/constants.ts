@@ -1,0 +1,1 @@
+export const MIN_ATTENDANCE_PERCENTAGE = 75;
